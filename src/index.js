@@ -22,21 +22,14 @@ export default function containByScreen(element: HTMLElement, anchorPoint: HTMLE
   }
 
   const elRect: Rect = getBoundingClientRect(element);
-  let anchorRect: Rect = getBoundingClientRect(anchorPoint);
+  const anchorRect: Rect = getBoundingClientRect(anchorPoint);
 
-  const buffer = options.buffer || 0;
-  const topBuffer = options.topBuffer || 0;
-  const bottomBuffer = options.bottomBuffer || 0;
-  const leftBuffer = options.leftBuffer || 0;
-  const rightBuffer = options.rightBuffer || 0;
-
-  anchorRect = {
-    top: anchorRect.top-buffer-topBuffer,
-    bottom: anchorRect.bottom+buffer+bottomBuffer,
-    height: anchorRect.height+2*buffer+topBuffer+bottomBuffer,
-    left: anchorRect.left-buffer-leftBuffer,
-    right: anchorRect.right+buffer+rightBuffer,
-    width: anchorRect.width+2*buffer+leftBuffer+rightBuffer
+  const buffers = {
+    all: options.buffer || 0,
+    top: options.topBuffer || 0,
+    bottom: options.bottomBuffer || 0,
+    left: options.leftBuffer || 0,
+    right: options.rightBuffer || 0
   };
 
   const positions: Position[] = options.position && options.forcePosition ?
@@ -65,12 +58,13 @@ export default function containByScreen(element: HTMLElement, anchorPoint: HTMLE
     // We've got an array of all sensible {position, hAlign, vAlign} combinations
     .map(({position, hAlign, vAlign}) => ({
       choice: {position, hAlign, vAlign},
-      coord: positionAndAlign(elRect, anchorRect, position, hAlign, vAlign)
+      coord: positionAndAlign(elRect, anchorRect, position, hAlign, vAlign, buffers)
     }))
     .filter(({choice, coord: {top, left}}) =>
-      top >= 0 && left >= 0 &&
-      top+elRect.height <= window.innerHeight &&
-      left+elRect.width <= window.innerWidth
+      top-buffers.all-buffers.top >= 0 &&
+      left-buffers.all-buffers.left >= 0 &&
+      top+elRect.height+buffers.all+buffers.bottom <= window.innerHeight &&
+      left+elRect.width+buffers.all+buffers.right <= window.innerWidth
     )
     .first()
     .value();
@@ -84,12 +78,13 @@ export default function containByScreen(element: HTMLElement, anchorPoint: HTMLE
     };
     choiceAndCoord = {
       choice,
-      coord: positionAndAlign(elRect, anchorRect, choice.position, choice.hAlign, choice.vAlign)
+      coord: positionAndAlign(elRect, anchorRect,
+        choice.position, choice.hAlign, choice.vAlign, buffers)
     };
   }
 
-  element.style.top = `${choiceAndCoord.coord.top + buffer + topBuffer}px`;
-  element.style.left = `${choiceAndCoord.coord.left + buffer + leftBuffer}px`;
+  element.style.top = `${choiceAndCoord.coord.top}px`;
+  element.style.left = `${choiceAndCoord.coord.left}px`;
 
   return choiceAndCoord.choice;
 }
@@ -106,15 +101,15 @@ function getBoundingClientRect(el: Element): Rect {
   return rect;
 }
 
-function positionAndAlign(elRect: Rect, anchorRect: Rect, position: Position, hAlign: HAlign, vAlign: VAlign): {top: number, left: number} {
+function positionAndAlign(elRect: Rect, anchorRect: Rect, position: Position, hAlign: HAlign, vAlign: VAlign, buffers): {top: number, left: number} {
   let top=0, left=0;
   if (position === 'top' || position === 'bottom') {
     switch (position) {
       case 'top':
-        top = Math.floor(anchorRect.top - elRect.height);
+        top = Math.floor(anchorRect.top - elRect.height - buffers.all - buffers.bottom);
         break;
       case 'bottom':
-        top = Math.ceil(anchorRect.bottom);
+        top = Math.ceil(anchorRect.bottom + buffers.all + buffers.top);
         break;
       default: throw new Error("Should not happen");
     }
@@ -133,10 +128,10 @@ function positionAndAlign(elRect: Rect, anchorRect: Rect, position: Position, hA
   } else {
     switch (position) {
       case 'left':
-        left = Math.floor(anchorRect.left - elRect.width);
+        left = Math.floor(anchorRect.left - elRect.width - buffers.all - buffers.right);
         break;
       case 'right':
-        left = Math.ceil(anchorRect.right);
+        left = Math.ceil(anchorRect.right + buffers.all + buffers.left);
         break;
       default: throw new Error("Should not happen");
     }
