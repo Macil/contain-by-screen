@@ -1,6 +1,6 @@
 {
   "name": "contain-by-screen",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Position a dropdown element near a button in a way that fits on the screen.",
   "main": "js/index.js",
   "scripts": {
@@ -34,6 +34,6 @@
   },
   "dependencies": {
     "babel-runtime": "^6.3.19",
-    "lodash": "^4.0.0"
+    "lodash": "^3.10.1"
   }
 }
