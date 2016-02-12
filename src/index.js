@@ -1,7 +1,24 @@
 /* @flow */
 
 import _ from 'lodash';
-import type {Position, HAlign, VAlign, Options} from './index.js.flow';
+
+export type Position = 'top'|'bottom'|'left'|'right';
+export type HAlign = 'center'|'left'|'right';
+export type VAlign = 'center'|'top'|'bottom';
+
+export type Options = {
+  position?: ?Position;
+  forcePosition?: ?boolean;
+  hAlign?: ?HAlign;
+  forceHAlign?: ?boolean;
+  vAlign?: ?VAlign;
+  forceVAlign?: ?boolean;
+  buffer?: ?number;
+  topBuffer?: ?number;
+  bottomBuffer?: ?number;
+  leftBuffer?: ?number;
+  rightBuffer?: ?number;
+};
 
 type Rect = { // Similar to ClientRect, but not a class
   top: number;
