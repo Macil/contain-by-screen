@@ -18,6 +18,11 @@
   ],
   "author": "Chris Cowan <agentme49@gmail.com>",
   "license": "MIT",
+  "browserify": {
+    "transform": [
+      "envify"
+    ]
+  },
   "bugs": {
     "url": "https://github.com/AgentME/contain-by-screen/issues"
   },
@@ -35,6 +40,7 @@
   },
   "dependencies": {
     "babel-runtime": "^6.3.19",
+    "envify": "^3.4.0",
     "lodash": "^4.6.1"
   }
 }
