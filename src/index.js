@@ -61,15 +61,9 @@ export default function containByScreen(element: HTMLElement, anchorPoint: HTMLE
 
   let choiceAndCoord = _.chain(positions)
     .map(position =>
-      position === 'top' || position === 'bottom' ?
-        hAligns.map(hAlign => ({position, hAlign})) :
-        [{position, hAlign: 'center'}]
-    )
-    .flatten()
-    .map(({position, hAlign}) =>
-      position === 'top' || position === 'bottom' ?
-        [{position, hAlign, vAlign: 'center'}] :
-        vAligns.map(vAlign => ({position, hAlign, vAlign}))
+      (position === 'top' || position === 'bottom') ?
+        hAligns.map(hAlign => ({position, hAlign, vAlign: 'center'})) :
+        vAligns.map(vAlign => ({position, hAlign: 'center', vAlign}))
     )
     .flatten()
     // We've got an array of all sensible {position, hAlign, vAlign} combinations
