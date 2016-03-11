@@ -1,7 +1,7 @@
 /* @flow */
 
-import flatten from 'lodash/array/flatten';
-import uniq from 'lodash/array/uniq';
+import flatten from 'lodash/flatten';
+import uniq from 'lodash/uniq';
 
 export type Position = 'top'|'bottom'|'left'|'right';
 export type HAlign = 'center'|'left'|'right';
