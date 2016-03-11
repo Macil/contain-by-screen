@@ -1,10 +1,16 @@
 /* @flow */
 
-import _ from 'lodash';
+import flatten from 'lodash/array/flatten';
+import uniq from 'lodash/array/uniq';
 
 export type Position = 'top'|'bottom'|'left'|'right';
 export type HAlign = 'center'|'left'|'right';
 export type VAlign = 'center'|'top'|'bottom';
+export type Choice = {
+  position: Position;
+  hAlign: HAlign;
+  vAlign: VAlign;
+};
 
 export type Options = {
   position?: ?Position;
@@ -30,7 +36,7 @@ type Rect = { // Similar to ClientRect, but not a class
 };
 
 export default function containByScreen(element: HTMLElement, anchorPoint: HTMLElement, options: Options):
-{position: Position, hAlign: HAlign, vAlign: VAlign} {
+Choice {
   if (process.env.NODE_ENV !== 'production' && window.getComputedStyle) {
     const style = window.getComputedStyle(element);
     if (style.position !== 'fixed') {
@@ -51,34 +57,35 @@ export default function containByScreen(element: HTMLElement, anchorPoint: HTMLE
 
   const positions: Position[] = options.position && options.forcePosition ?
     [options.position] :
-    _.uniq([options.position].concat(['top','bottom','left','right']).filter(Boolean));
+    uniq([options.position].filter(Boolean).concat(['top','bottom','left','right']));
   const hAligns: HAlign[] = options.hAlign && options.forceHAlign ?
     [options.hAlign] :
-    _.uniq([options.hAlign].concat(['center','left','right']).filter(Boolean));
+    uniq([options.hAlign].filter(Boolean).concat(['center','left','right']));
   const vAligns: VAlign[] = options.vAlign && options.forceVAlign ?
     [options.vAlign] :
-    _.uniq([options.vAlign].concat(['center','top','bottom']).filter(Boolean));
+    uniq([options.vAlign].filter(Boolean).concat(['center','top','bottom']));
 
-  let choiceAndCoord = _.chain(positions)
-    .map(position =>
-      (position === 'top' || position === 'bottom') ?
-        hAligns.map(hAlign => ({position, hAlign, vAlign: 'center'})) :
-        vAligns.map(vAlign => ({position, hAlign: 'center', vAlign}))
-    )
-    .flatten()
-    // We've got an array of all sensible {position, hAlign, vAlign} combinations
-    .map(({position, hAlign, vAlign}) => ({
-      choice: {position, hAlign, vAlign},
-      coord: positionAndAlign(elRect, anchorRect, position, hAlign, vAlign, buffers)
-    }))
-    .filter(({choice, coord: {top, left}}) =>
+  const allPossibleChoices = flatten(positions.map(position =>
+    (position === 'top' || position === 'bottom') ?
+      hAligns.map(hAlign => ({position, hAlign, vAlign: 'center'})) :
+      vAligns.map(vAlign => ({position, hAlign: 'center', vAlign}))
+  ));
+
+  let choiceAndCoord = null;
+  for (let i=0; i < allPossibleChoices.length; i++) {
+    const choice = allPossibleChoices[i];
+    const coord = positionAndAlign(elRect, anchorRect, choice, buffers);
+    const {top, left} = coord;
+    if (
       top-buffers.all-buffers.top >= 0 &&
       left-buffers.all-buffers.left >= 0 &&
       top+elRect.height+buffers.all+buffers.bottom <= window.innerHeight &&
       left+elRect.width+buffers.all+buffers.right <= window.innerWidth
-    )
-    .first()
-    .value();
+    ) {
+      choiceAndCoord = {choice, coord};
+      break;
+    }
+  }
 
   // Fallback if we failed to find a position that fit on the screen.
   if (!choiceAndCoord) {
@@ -89,8 +96,7 @@ export default function containByScreen(element: HTMLElement, anchorPoint: HTMLE
     };
     choiceAndCoord = {
       choice,
-      coord: positionAndAlign(elRect, anchorRect,
-        choice.position, choice.hAlign, choice.vAlign, buffers)
+      coord: positionAndAlign(elRect, anchorRect, choice, buffers)
     };
   }
 
@@ -112,7 +118,7 @@ function getBoundingClientRect(el: Element): Rect {
   return rect;
 }
 
-function positionAndAlign(elRect: Rect, anchorRect: Rect, position: Position, hAlign: HAlign, vAlign: VAlign, buffers): {top: number, left: number} {
+function positionAndAlign(elRect: Rect, anchorRect: Rect, {position, hAlign, vAlign}: Choice, buffers): {top: number, left: number} {
   let top=0, left=0;
   if (position === 'top' || position === 'bottom') {
     switch (position) {
