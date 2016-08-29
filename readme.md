@@ -68,5 +68,5 @@ alignment with the anchor element.
 
 ## Types
 
-Full [Flow Type](http://flowtype.org/) declarations for this module are
+Full [Flow](http://flowtype.org/) type declarations for this module are
 included!

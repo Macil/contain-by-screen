@@ -5,7 +5,10 @@
   "main": "js/index.js",
   "scripts": {
     "prepublish": "babel -s inline -d js/ src/ && flow-copy-source -v src js",
-    "test": "mocha"
+    "test": "npm run lint && npm run flow_check && mocha",
+    "flow_check": "flow check",
+    "lint": "eslint .",
+    "lint-fix": "eslint . --fix"
   },
   "repository": {
     "type": "git",
@@ -28,19 +31,23 @@
   },
   "homepage": "https://github.com/AgentME/contain-by-screen#readme",
   "devDependencies": {
-    "babel-cli": "^6.4.0",
-    "babel-plugin-add-module-exports": "^0.1.2",
-    "babel-plugin-transform-class-properties": "^6.4.0",
-    "babel-plugin-transform-flow-strip-types": "^6.4.0",
-    "babel-plugin-transform-runtime": "^6.4.3",
-    "babel-preset-es2015": "^6.3.13",
-    "babel-register": "^6.4.3",
+    "babel-cli": "^6.14.0",
+    "babel-eslint": "^6.1.2",
+    "babel-plugin-add-module-exports": "^0.2.1",
+    "babel-plugin-transform-class-properties": "^6.11.5",
+    "babel-plugin-transform-flow-strip-types": "^6.14.0",
+    "babel-plugin-transform-runtime": "^6.12.0",
+    "babel-preset-es2015": "^6.14.0",
+    "babel-register": "^6.14.0",
+    "eslint": "^3.4.0",
+    "eslint-plugin-react": "^6.2.0",
+    "flow-bin": "^0.31.1",
     "flow-copy-source": "^1.0.1",
-    "mocha": "^2.3.4"
+    "mocha": "^3.0.2"
   },
   "dependencies": {
-    "babel-runtime": "^6.3.19",
-    "envify": "^3.4.0",
+    "babel-runtime": "^6.11.6",
+    "envify": "^3.4.1",
     "lodash": "^4.6.1"
   }
 }

@@ -40,6 +40,7 @@ Choice {
   if (process.env.NODE_ENV !== 'production' && window.getComputedStyle) {
     const style = window.getComputedStyle(element);
     if (style.position !== 'fixed') {
+      // eslint-disable-next-line no-console
       console.error('containByScreen only works on fixed position elements', element);
     }
   }
@@ -122,47 +123,47 @@ function positionAndAlign(elRect: Rect, anchorRect: Rect, {position, hAlign, vAl
   let top=0, left=0;
   if (position === 'top' || position === 'bottom') {
     switch (position) {
-      case 'top':
-        top = Math.floor(anchorRect.top - elRect.height - buffers.all - buffers.bottom);
-        break;
-      case 'bottom':
-        top = Math.ceil(anchorRect.bottom + buffers.all + buffers.top);
-        break;
-      default: throw new Error("Should not happen");
+    case 'top':
+      top = Math.floor(anchorRect.top - elRect.height - buffers.all - buffers.bottom);
+      break;
+    case 'bottom':
+      top = Math.ceil(anchorRect.bottom + buffers.all + buffers.top);
+      break;
+    default: throw new Error('Should not happen');
     }
     switch (hAlign) {
-      case 'center':
-        left = Math.round((anchorRect.left + anchorRect.right - elRect.width)/2);
-        break;
-      case 'left':
-        left = Math.round(anchorRect.left);
-        break;
-      case 'right':
-        left = Math.round(anchorRect.right - elRect.width);
-        break;
-      default: throw new Error("Should not happen");
+    case 'center':
+      left = Math.round((anchorRect.left + anchorRect.right - elRect.width)/2);
+      break;
+    case 'left':
+      left = Math.round(anchorRect.left);
+      break;
+    case 'right':
+      left = Math.round(anchorRect.right - elRect.width);
+      break;
+    default: throw new Error('Should not happen');
     }
   } else {
     switch (position) {
-      case 'left':
-        left = Math.floor(anchorRect.left - elRect.width - buffers.all - buffers.right);
-        break;
-      case 'right':
-        left = Math.ceil(anchorRect.right + buffers.all + buffers.left);
-        break;
-      default: throw new Error("Should not happen");
+    case 'left':
+      left = Math.floor(anchorRect.left - elRect.width - buffers.all - buffers.right);
+      break;
+    case 'right':
+      left = Math.ceil(anchorRect.right + buffers.all + buffers.left);
+      break;
+    default: throw new Error('Should not happen');
     }
     switch (vAlign) {
-      case 'center':
-        top = Math.round((anchorRect.top + anchorRect.bottom - elRect.height)/2);
-        break;
-      case 'top':
-        top = Math.round(anchorRect.top);
-        break;
-      case 'bottom':
-        top = Math.round(anchorRect.bottom - elRect.height);
-        break;
-      default: throw new Error("Should not happen");
+    case 'center':
+      top = Math.round((anchorRect.top + anchorRect.bottom - elRect.height)/2);
+      break;
+    case 'top':
+      top = Math.round(anchorRect.top);
+      break;
+    case 'bottom':
+      top = Math.round(anchorRect.bottom - elRect.height);
+      break;
+    default: throw new Error('Should not happen');
     }
   }
   return {top, left};
