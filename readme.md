@@ -22,19 +22,19 @@ be the button that triggered a dropdown menu to appear.
 `options` is an object that may have the following optional properties:
 
 `position` sets the prioritized position for the target relative to its anchor.
-It may be set to null, "top", "bottom", "left", or "right". The element will
-use this position unless it is not possible to do so while fitting the element
-on-screen.
+It may be set to null, "top", "bottom", "left", "right", or "cover". The
+element will use this position unless it is not possible to do so while fitting
+the element on-screen.
 
 `forcePosition` is a boolean which controls whether the configured position
 value will be used even if it results in the element going off of the screen.
 
 `hAlign` sets the prioritized horizontal alignment mode for the element
 relative to its anchor. The horizontal alignment mode is used if the element is
-positioned in the top or bottom positions relative to the anchor, and causes
-the element to be moved horizontally in order to make a specific edge align. It
-may be set to null, "center", "left", or "right". The element will use this
-alignment unless it is not possible to do so while fitting the element
+positioned in the top, bottom, or cover positions relative to the anchor, and
+causes the element to be moved horizontally in order to make a specific edge
+align. It may be set to null, "center", "left", or "right". The element will
+use this alignment unless it is not possible to do so while fitting the element
 on-screen.
 
 `forceHAlign` is a boolean which controls whether the configured hAlign value
@@ -42,10 +42,11 @@ will be used even if it results in the element going off of the screen.
 
 `vAlign` sets the prioritized vertical alignment mode for the element relative
 to its anchor. The vertical alignment mode is used if the element is positioned
-in the left or right positions relative to the anchor, and causes the element
-to be moved vertically in order to make a specific edge align. It may be set to
-null, "center", "top", or "bottom". The element will use this alignment unless
-it is not possible to do so while fitting the element on-screen.
+in the left, right, or cover positions relative to the anchor, and causes the
+element to be moved vertically in order to make a specific edge align. It may
+be set to null, "center", "top", or "bottom". The element will use this
+alignment unless it is not possible to do so while fitting the element
+on-screen.
 
 `forceVAlign` is a boolean which controls whether the configured vAlign value
 will be used even if it results in the element going off of the screen.
