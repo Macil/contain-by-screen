@@ -69,7 +69,7 @@ Choice {
   const allPossibleChoices = flatten(positions.map(position =>
     (position === 'top' || position === 'bottom') ?
       hAligns.map(hAlign => ({position, hAlign, vAlign: 'center'})) :
-    vAligns.map(vAlign => ({position, hAlign: 'center', vAlign}))
+      vAligns.map(vAlign => ({position, hAlign: 'center', vAlign}))
   ));
 
   let choiceAndCoord = null;
@@ -124,7 +124,7 @@ function positionAndAlign(elRect: Rect, anchorRect: Rect, {position, hAlign, vAl
   if (position === 'top' || position === 'bottom') {
     switch (position) {
     case 'top':
-      top = Math.floor(anchorRect.top - buffers.all - buffers.bottom);
+      top = Math.floor(anchorRect.top - elRect.height - buffers.all - buffers.bottom);
       break;
     case 'bottom':
       top = Math.ceil(anchorRect.bottom + buffers.all + buffers.top);
