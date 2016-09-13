@@ -68,7 +68,7 @@ Choice {
 
   const allPossibleChoices = flatten(positions.map(position =>
     (position === 'cover') ?
-      hAligns.map(hAlign => vAligns.map(vAlign => ({position, hAlign, vAlign}))) :
+      flatten(hAligns.map(hAlign => vAligns.map(vAlign => ({position, hAlign, vAlign})))) :
     (position === 'top' || position === 'bottom') ?
       hAligns.map(hAlign => ({position, hAlign, vAlign: 'center'})) :
     vAligns.map(vAlign => ({position, hAlign: 'center', vAlign}))
