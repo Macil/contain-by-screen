@@ -224,6 +224,30 @@ describe('containByScreen', function() {
         });
         assert.deepEqual(dropdown.style, {top: '330px', left: '70px'});
       });
+
+      it('cover, vAlign=center hAlign=right', function() {
+        const button = new MockElement({top: 400, bottom: 430, left: 100, right: 200});
+        const dropdown = new MockElement({top: 0, bottom: 100, left: 0, right: 130});
+
+        containByScreen((dropdown: any), (button: any), {
+          position: 'cover',
+          hAlign: 'right',
+          vAlign: 'center'
+        });
+        assert.deepEqual(dropdown.style, {top: '365px', left: '70px'});
+      });
+
+      it('cover, vAlign=center hAlign=center', function() {
+        const button = new MockElement({top: 400, bottom: 430, left: 100, right: 200});
+        const dropdown = new MockElement({top: 0, bottom: 100, left: 0, right: 130});
+
+        containByScreen((dropdown: any), (button: any), {
+          position: 'cover',
+          hAlign: 'center',
+          vAlign: 'center'
+        });
+        assert.deepEqual(dropdown.style, {top: '365px', left: '85px'});
+      });
     });
 
   });
