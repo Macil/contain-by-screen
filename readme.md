@@ -69,5 +69,5 @@ element. Buffers do not affect alignment with the anchor element.
 
 ## Types
 
-Full [Flow](http://flowtype.org/) type declarations for this module are
+Full [Flow](https://flowtype.org/) type declarations for this module are
 included!
