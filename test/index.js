@@ -44,7 +44,7 @@ describe('containByScreen', function() {
 
   describe('buffers', function() {
 
-    describe('distance from anchor', function() {
+    describe('target is placed buffer distance away', function() {
 
       it('right, vAlign=top with buffers', function() {
         const button = new MockElement({top: 300, bottom: 320, left: 300, right: 350});
@@ -136,7 +136,7 @@ describe('containByScreen', function() {
 
     });
 
-    describe('distance from screen edge', function() {
+    describe('forces reposition if necessary', function() {
 
       it('top', function() {
         const button = new MockElement({top: 200, bottom: 400, left: 300, right: 400});
