@@ -134,6 +134,40 @@ describe('containByScreen', function() {
         assert.deepEqual(dropdown.style, {top: '323px', left: '275px'});
       });
 
+      describe('only used to guarantee space from screen edge in position:cover', function() {
+        it('vAlign=top hAlign=left with buffers', function() {
+          const button = new MockElement({top: 300, bottom: 320, left: 300, right: 350});
+          const dropdown = new MockElement({top: 0, bottom: 200, left: 0, right: 100});
+          containByScreen((dropdown: any), (button: any), {
+            position: 'cover', vAlign: 'top', hAlign: 'left',
+            buffer: 1, leftBuffer: 2, topBuffer: 4,
+            bottomBuffer: 8, rightBuffer: 16
+          });
+          assert.deepEqual(dropdown.style, {top: '300px', left: '300px'});
+        });
+
+        it('vAlign=bottom hAlign=right with buffers', function() {
+          const button = new MockElement({top: 300, bottom: 320, left: 300, right: 350});
+          const dropdown = new MockElement({top: 0, bottom: 200, left: 0, right: 100});
+          containByScreen((dropdown: any), (button: any), {
+            position: 'cover', vAlign: 'bottom', hAlign: 'right',
+            buffer: 1, leftBuffer: 2, topBuffer: 4,
+            bottomBuffer: 8, rightBuffer: 16
+          });
+          assert.deepEqual(dropdown.style, {top: '120px', left: '250px'});
+        });
+
+        it('vAlign=center hAlign=center with buffers', function() {
+          const button = new MockElement({top: 300, bottom: 320, left: 300, right: 350});
+          const dropdown = new MockElement({top: 0, bottom: 200, left: 0, right: 100});
+          containByScreen((dropdown: any), (button: any), {
+            position: 'cover', vAlign: 'center', hAlign: 'center',
+            buffer: 1, leftBuffer: 2, topBuffer: 4,
+            bottomBuffer: 8, rightBuffer: 16
+          });
+          assert.deepEqual(dropdown.style, {top: '210px', left: '275px'});
+        });
+      });
     });
 
     describe('forces reposition if necessary', function() {

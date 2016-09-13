@@ -129,10 +129,10 @@ function positionAndAlign(elRect: Rect, anchorRect: Rect, {position, hAlign, vAl
       left = Math.round((anchorRect.left + anchorRect.right - elRect.width)/2);
       break;
     case 'left':
-      left = Math.round(anchorRect.left);
+      left = Math.floor(anchorRect.left);
       break;
     case 'right':
-      left = Math.round(anchorRect.right - elRect.width);
+      left = Math.ceil(anchorRect.right - elRect.width);
       break;
     default: throw new Error('Should not happen');
     }
@@ -141,10 +141,10 @@ function positionAndAlign(elRect: Rect, anchorRect: Rect, {position, hAlign, vAl
       top = Math.round((anchorRect.top + anchorRect.bottom - elRect.height)/2);
       break;
     case 'top':
-      top = Math.floor(anchorRect.top - buffers.all - buffers.bottom);
+      top = Math.floor(anchorRect.top);
       break;
     case 'bottom':
-      top = Math.floor(anchorRect.bottom - elRect.height - buffers.all - buffers.bottom);
+      top = Math.ceil(anchorRect.bottom - elRect.height);
       break;
     default: throw new Error('Should not happen');
     }
