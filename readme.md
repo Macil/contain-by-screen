@@ -67,6 +67,13 @@ element. Buffers do not affect alignment with the anchor element.
 
 `rightBuffer` specifies an additional buffer space only for the right edge.
 
+## Related
+
+The project [react-float-anchor](https://github.com/StreakYC/react-float-anchor)
+is a React wrapper around this function, and
+[react-menu-list](https://github.com/StreakYC/react-menu-list) is a library for
+building interactive menus that uses it.
+
 ## Types
 
 Full [Flow](https://flowtype.org/) type declarations for this module are
