@@ -4,7 +4,7 @@
   "description": "Position a dropdown element near a button in a way that fits on the screen.",
   "main": "js/index.js",
   "scripts": {
-    "prepublish": "babel -s inline -d js/ src/ && flow-copy-source -v src js",
+    "prepare": "rimraf js && babel -s inline -d js/ src/ && flow-copy-source -v src js",
     "test": "npm run lint && npm run flow_check && mocha",
     "flow_check": "flow check",
     "lint": "eslint .",
@@ -43,7 +43,8 @@
     "eslint-plugin-flowtype": "^2.35.0",
     "flow-bin": "^0.51.1",
     "flow-copy-source": "^1.0.1",
-    "mocha": "^3.0.2"
+    "mocha": "^3.0.2",
+    "rimraf": "^2.6.1"
   },
   "dependencies": {
     "babel-runtime": "^6.23.0",
