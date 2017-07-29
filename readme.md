@@ -54,18 +54,13 @@ will be used even if it results in the element going off of the screen.
 `buffer` specifies a number of pixels to be used as a buffer zone around the
 target. For screen-fitting purposes, the target will be treated as if it was
 this much larger in all directions, requiring it to be placed with the given
-amount of space between it, the anchor element when position is not "cover",
-and the edges of the screen. The buffer option is useful if the element has
+amount of space away from the anchor element (when position is not "cover") and
+the edges of the screen. The buffer option is useful if the element has
 children which are positioned such that they escape the boundaries of the
 element. Buffers do not affect alignment with the anchor element.
 
-`topBuffer` specifies an additional buffer space only for the top edge.
-
-`bottomBuffer` specifies an additional buffer space only for the bottom edge.
-
-`leftBuffer` specifies an additional buffer space only for the left edge.
-
-`rightBuffer` specifies an additional buffer space only for the right edge.
+`topBuffer`, `bottomBuffer`, `leftBuffer`, and `rightBuffer` specify an
+additional buffer space for a specific edge.
 
 ## Related
 
