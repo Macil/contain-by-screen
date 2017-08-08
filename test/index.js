@@ -186,7 +186,7 @@ describe('containByScreen', function() {
         assert.deepEqual(dropdown.style, {top: '205px', left: '200px'});
       });
 
-      it('vAlgin', function(){
+      it('vAlgin', function() {
         const button = new MockElement({top: 200, bottom: 400, left: 300, right: 400});
         const dropdown = new MockElement({top: 0, bottom: 190, left: 0, right: 100});
         containByScreen((dropdown: any), (button: any), {
