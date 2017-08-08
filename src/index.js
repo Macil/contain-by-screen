@@ -3,9 +3,13 @@
 import flatten from 'lodash/flatten';
 import uniq from 'lodash/uniq';
 
-export type Position = 'top'|'bottom'|'left'|'right';
-export type HAlign = 'center'|'left'|'right';
-export type VAlign = 'center'|'top'|'bottom';
+type PositionOption = 'top'|'bottom'|'left'|'right';
+type HAlignOption = 'center'|'left'|'right';
+type VAlignOption = 'center'|'top'|'bottom';
+
+export type Position = PositionOption | PositionOption[];
+export type HAlign = HAlignOption | HAlignOption[];
+export type VAlign = VAlignOption | VAlignOption[];
 export type Choice = {
   position: Position;
   hAlign: HAlign;
@@ -56,15 +60,19 @@ Choice {
     right: options.rightBuffer || 0
   };
 
-  const positions: Position[] = options.position && options.forcePosition ?
-    [options.position] :
-    uniq([options.position].filter(Boolean).concat(['top','bottom','left','right']));
-  const hAligns: HAlign[] = options.hAlign && options.forceHAlign ?
-    [options.hAlign] :
-    uniq([options.hAlign].filter(Boolean).concat(['center','left','right']));
-  const vAligns: VAlign[] = options.vAlign && options.forceVAlign ?
-    [options.vAlign] :
-    uniq([options.vAlign].filter(Boolean).concat(['center','top','bottom']));
+  const optionPositions = Array.isArray(options.position) ? options.position : [options.position].filter(Boolean);
+  const optionHAligns = Array.isArray(options.hAlign) ? options.hAlign : [options.hAlign].filter(Boolean);
+  const optionVAligns = Array.isArray(options.vAlign) ? options.vAlign : [options.vAlign].filter(Boolean);
+
+  const positions: PositionOption[] = optionPositions.length > 0 && options.forcePosition ?
+    optionPositions :
+    uniq(optionPositions.concat(['top','bottom','left','right']));
+  const hAligns: HAlignOption[] = optionHAligns.length > 0 && options.forceHAlign ?
+    optionHAligns :
+    uniq(optionHAligns.concat(['center','left','right']));
+  const vAligns: VAlignOption[] = optionVAligns.length > 0 && options.forceVAlign ?
+    optionVAligns :
+    uniq(optionVAligns.concat(['center','top','bottom']));
 
   const allPossibleChoices = flatten(positions.map(position =>
     (position === 'top' || position === 'bottom') ?
@@ -91,9 +99,9 @@ Choice {
   // Fallback if we failed to find a position that fit on the screen.
   if (!choiceAndCoord) {
     const choice = {
-      position: options.position||'top',
-      hAlign: options.hAlign||'center',
-      vAlign: options.vAlign||'center'
+      position: optionPositions[0]||'top',
+      hAlign: optionHAligns[0]||'center',
+      vAlign: optionVAligns[0]||'center'
     };
     choiceAndCoord = {
       choice,

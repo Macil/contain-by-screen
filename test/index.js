@@ -176,5 +176,35 @@ describe('containByScreen', function() {
 
     });
 
+    describe('can handle arrays', function() {
+      it('position', function() {
+        const button = new MockElement({top: 200, bottom: 400, left: 300, right: 400});
+        const dropdown = new MockElement({top: 0, bottom: 190, left: 0, right: 100});
+        containByScreen((dropdown: any), (button: any), {
+          position: ['top', 'bottom'], hAlign: 'left', topBuffer: 11
+        });
+        assert.deepEqual(dropdown.style, {top: '205px', left: '200px'});
+      });
+
+      it('vAlgin', function(){
+        const button = new MockElement({top: 200, bottom: 400, left: 300, right: 400});
+        const dropdown = new MockElement({top: 0, bottom: 190, left: 0, right: 100});
+        containByScreen((dropdown: any), (button: any), {
+          position: ['top'], hAlign: ['left'], topBuffer: 11
+        });
+        assert.deepEqual(dropdown.style, {top: '205px', left: '200px'});
+      });
+
+      it('hAlign', function() {
+        const button = new MockElement({top: 300, bottom: 320, left: 300, right: 500});
+        const dropdown = new MockElement({top: 0, bottom: 200, left: 0, right: 290});
+        containByScreen((dropdown: any), (button: any), {
+          position: 'right', vAlign: ['top'], rightBuffer: 11
+        });
+        assert.deepEqual(dropdown.style, {top: '100px', left: '255px'});
+      });
+
+    });
+
   });
 });
