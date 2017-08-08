@@ -1,10 +1,10 @@
 {
   "name": "contain-by-screen",
-  "version": "1.0.4",
+  "version": "1.1.1",
   "description": "Position a dropdown element near a button in a way that fits on the screen.",
   "main": "js/index.js",
   "scripts": {
-    "prepublish": "babel -s inline -d js/ src/ && flow-copy-source -v src js",
+    "prepare": "rimraf js && babel -s inline -d js/ src/ && flow-copy-source -v src js",
     "test": "npm run lint && npm run flow_check && mocha",
     "flow_check": "flow check",
     "lint": "eslint .",
@@ -32,22 +32,23 @@
   "homepage": "https://github.com/AgentME/contain-by-screen#readme",
   "devDependencies": {
     "babel-cli": "^6.14.0",
-    "babel-eslint": "^6.1.2",
+    "babel-eslint": "^7.2.3",
     "babel-plugin-add-module-exports": "^0.2.1",
     "babel-plugin-transform-class-properties": "^6.11.5",
     "babel-plugin-transform-flow-strip-types": "^6.14.0",
     "babel-plugin-transform-runtime": "^6.12.0",
     "babel-preset-es2015": "^6.14.0",
     "babel-register": "^6.14.0",
-    "eslint": "^3.4.0",
-    "eslint-plugin-react": "^6.2.0",
-    "flow-bin": "^0.31.1",
+    "eslint": "^4.3.0",
+    "eslint-plugin-flowtype": "^2.35.0",
+    "flow-bin": "^0.51.1",
     "flow-copy-source": "^1.0.1",
-    "mocha": "^3.0.2"
+    "mocha": "^3.0.2",
+    "rimraf": "^2.6.1"
   },
   "dependencies": {
-    "babel-runtime": "^6.11.6",
-    "envify": "^3.4.1",
+    "babel-runtime": "^6.23.0",
+    "envify": "^4.1.0",
     "lodash": "^4.6.1"
   }
 }

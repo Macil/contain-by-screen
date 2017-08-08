@@ -44,7 +44,7 @@ describe('containByScreen', function() {
 
   describe('buffers', function() {
 
-    describe('distance from anchor', function() {
+    describe('target is placed buffer distance away', function() {
 
       it('right, vAlign=top with buffers', function() {
         const button = new MockElement({top: 300, bottom: 320, left: 300, right: 350});
@@ -134,9 +134,43 @@ describe('containByScreen', function() {
         assert.deepEqual(dropdown.style, {top: '323px', left: '275px'});
       });
 
+      describe('only used to guarantee space from screen edge in position:cover', function() {
+        it('vAlign=top hAlign=left with buffers', function() {
+          const button = new MockElement({top: 300, bottom: 320, left: 300, right: 350});
+          const dropdown = new MockElement({top: 0, bottom: 200, left: 0, right: 100});
+          containByScreen((dropdown: any), (button: any), {
+            position: 'cover', vAlign: 'top', hAlign: 'left',
+            buffer: 1, leftBuffer: 2, topBuffer: 4,
+            bottomBuffer: 8, rightBuffer: 16
+          });
+          assert.deepEqual(dropdown.style, {top: '300px', left: '300px'});
+        });
+
+        it('vAlign=bottom hAlign=right with buffers', function() {
+          const button = new MockElement({top: 300, bottom: 320, left: 300, right: 350});
+          const dropdown = new MockElement({top: 0, bottom: 200, left: 0, right: 100});
+          containByScreen((dropdown: any), (button: any), {
+            position: 'cover', vAlign: 'bottom', hAlign: 'right',
+            buffer: 1, leftBuffer: 2, topBuffer: 4,
+            bottomBuffer: 8, rightBuffer: 16
+          });
+          assert.deepEqual(dropdown.style, {top: '120px', left: '250px'});
+        });
+
+        it('vAlign=center hAlign=center with buffers', function() {
+          const button = new MockElement({top: 300, bottom: 320, left: 300, right: 350});
+          const dropdown = new MockElement({top: 0, bottom: 200, left: 0, right: 100});
+          containByScreen((dropdown: any), (button: any), {
+            position: 'cover', vAlign: 'center', hAlign: 'center',
+            buffer: 1, leftBuffer: 2, topBuffer: 4,
+            bottomBuffer: 8, rightBuffer: 16
+          });
+          assert.deepEqual(dropdown.style, {top: '210px', left: '275px'});
+        });
+      });
     });
 
-    describe('distance from screen edge', function() {
+    describe('forces reposition if necessary', function() {
 
       it('top', function() {
         const button = new MockElement({top: 200, bottom: 400, left: 300, right: 400});
@@ -203,8 +237,80 @@ describe('containByScreen', function() {
         });
         assert.deepEqual(dropdown.style, {top: '100px', left: '255px'});
       });
-
     });
 
+    describe('cover', function() {
+      it('cover, vAlign=top hAlign=left', function() {
+        const button = new MockElement({top: 100, bottom: 130, left: 100, right: 200});
+        const dropdown = new MockElement({top: 0, bottom: 100, left: 0, right: 100});
+
+        containByScreen((dropdown: any), (button: any), {
+          position: 'cover',
+          hAlign: 'left',
+          vAlign: 'top'
+        });
+        assert.deepEqual(dropdown.style, {top: '100px', left: '100px'});
+      });
+
+      it('cover, vAlign=top hAlign=right', function() {
+        const button = new MockElement({top: 100, bottom: 130, left: 200, right: 300});
+        const dropdown = new MockElement({top: 0, bottom: 100, left: 0, right: 130});
+
+        containByScreen((dropdown: any), (button: any), {
+          position: 'cover',
+          hAlign: 'right',
+          vAlign: 'top'
+        });
+        assert.deepEqual(dropdown.style, {top: '100px', left: '170px'});
+      });
+
+      it('cover, vAlign=bottom hAlign=left', function() {
+        const button = new MockElement({top: 400, bottom: 430, left: 100, right: 200});
+        const dropdown = new MockElement({top: 0, bottom: 100, left: 0, right: 100});
+
+        containByScreen((dropdown: any), (button: any), {
+          position: 'cover',
+          hAlign: 'left',
+          vAlign: 'bottom'
+        });
+        assert.deepEqual(dropdown.style, {top: '330px', left: '100px'});
+      });
+
+      it('cover, vAlign=bottom hAlign=right', function() {
+        const button = new MockElement({top: 400, bottom: 430, left: 100, right: 200});
+        const dropdown = new MockElement({top: 0, bottom: 100, left: 0, right: 130});
+
+        containByScreen((dropdown: any), (button: any), {
+          position: 'cover',
+          hAlign: 'right',
+          vAlign: 'bottom'
+        });
+        assert.deepEqual(dropdown.style, {top: '330px', left: '70px'});
+      });
+
+      it('cover, vAlign=center hAlign=right', function() {
+        const button = new MockElement({top: 400, bottom: 430, left: 100, right: 200});
+        const dropdown = new MockElement({top: 0, bottom: 100, left: 0, right: 130});
+
+        containByScreen((dropdown: any), (button: any), {
+          position: 'cover',
+          hAlign: 'right',
+          vAlign: 'center'
+        });
+        assert.deepEqual(dropdown.style, {top: '365px', left: '70px'});
+      });
+
+      it('cover, vAlign=center hAlign=center', function() {
+        const button = new MockElement({top: 400, bottom: 430, left: 100, right: 200});
+        const dropdown = new MockElement({top: 0, bottom: 100, left: 0, right: 130});
+
+        containByScreen((dropdown: any), (button: any), {
+          position: 'cover',
+          hAlign: 'center',
+          vAlign: 'center'
+        });
+        assert.deepEqual(dropdown.style, {top: '365px', left: '85px'});
+      });
+    });
   });
 });

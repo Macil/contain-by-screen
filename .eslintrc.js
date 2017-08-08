@@ -6,18 +6,20 @@ module.exports = {
     "node": true,
     "es6": true
   },
-  "extends": ["eslint:recommended", "plugin:react/recommended"],
+  "extends": ["eslint:recommended"],
   "parserOptions": {
     "ecmaFeatures": {
       "experimentalObjectRestSpread": true,
-      "jsx": true
     },
     "sourceType": "module"
   },
   "plugins": [
-    "react"
+    "flowtype"
   ],
   "rules": {
+    "flowtype/define-flow-type": 1,
+    "flowtype/require-valid-file-annotation": ["error", "always"],
+
     "indent": ["error", 2],
     "linebreak-style": ["error", "unix"],
     "quotes": ["error", "single", "avoid-escape"],

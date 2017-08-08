@@ -3,7 +3,7 @@
 import flatten from 'lodash/flatten';
 import uniq from 'lodash/uniq';
 
-type PositionOption = 'top'|'bottom'|'left'|'right';
+type PositionOption = 'top'|'bottom'|'left'|'right'|'cover';
 type HAlignOption = 'center'|'left'|'right';
 type VAlignOption = 'center'|'top'|'bottom';
 
@@ -75,9 +75,11 @@ Choice {
     uniq(optionVAligns.concat(['center','top','bottom']));
 
   const allPossibleChoices = flatten(positions.map(position =>
-    (position === 'top' || position === 'bottom') ?
-      hAligns.map(hAlign => ({position, hAlign, vAlign: 'center'})) :
-      vAligns.map(vAlign => ({position, hAlign: 'center', vAlign}))
+    (position === 'cover') ?
+      flatten(hAligns.map(hAlign => vAligns.map(vAlign => ({position, hAlign, vAlign})))) :
+      (position === 'top' || position === 'bottom') ?
+        hAligns.map(hAlign => ({position, hAlign, vAlign: 'center'})) :
+        vAligns.map(vAlign => ({position, hAlign: 'center', vAlign}))
   ));
 
   let choiceAndCoord = null;
@@ -129,7 +131,32 @@ function getBoundingClientRect(el: Element): Rect {
 
 function positionAndAlign(elRect: Rect, anchorRect: Rect, {position, hAlign, vAlign}: Choice, buffers): {top: number, left: number} {
   let top=0, left=0;
-  if (position === 'top' || position === 'bottom') {
+  if (position === 'cover') {
+    switch (hAlign) {
+    case 'center':
+      left = Math.round((anchorRect.left + anchorRect.right - elRect.width)/2);
+      break;
+    case 'left':
+      left = Math.floor(anchorRect.left);
+      break;
+    case 'right':
+      left = Math.ceil(anchorRect.right - elRect.width);
+      break;
+    default: throw new Error('Should not happen');
+    }
+    switch (vAlign) {
+    case 'center':
+      top = Math.round((anchorRect.top + anchorRect.bottom - elRect.height)/2);
+      break;
+    case 'top':
+      top = Math.floor(anchorRect.top);
+      break;
+    case 'bottom':
+      top = Math.ceil(anchorRect.bottom - elRect.height);
+      break;
+    default: throw new Error('Should not happen');
+    }
+  } else if (position === 'top' || position === 'bottom') {
     switch (position) {
     case 'top':
       top = Math.floor(anchorRect.top - elRect.height - buffers.all - buffers.bottom);
