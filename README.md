@@ -1,7 +1,6 @@
 # contain-by-screen
 
-[![Circle CI](https://circleci.com/gh/AgentME/contain-by-screen.svg?style=shield)](https://circleci.com/gh/AgentME/contain-by-screen)
-[![npm version](https://badge.fury.io/js/contain-by-screen.svg)](https://badge.fury.io/js/contain-by-screen)
+[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/AgentME/contain-by-screen/blob/master/LICENSE.txt) [![npm version](https://img.shields.io/npm/v/contain-by-screen.svg?style=flat)](https://www.npmjs.com/package/contain-by-screen) [![CircleCI Status](https://circleci.com/gh/AgentME/contain-by-screen.svg?style=shield)](https://circleci.com/gh/AgentME/contain-by-screen)
 
 This function is for positioning an element next to another in a way that fits
 on the screen. This can be used to position a dropdown menu next to a button.
