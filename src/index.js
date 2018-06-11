@@ -11,9 +11,9 @@ export type Position = PositionOption | PositionOption[];
 export type HAlign = HAlignOption | HAlignOption[];
 export type VAlign = VAlignOption | VAlignOption[];
 export type Choice = {
-  position: Position;
-  hAlign: HAlign;
-  vAlign: VAlign;
+  position: PositionOption;
+  hAlign: HAlignOption;
+  vAlign: VAlignOption;
 };
 
 export type Options = {
