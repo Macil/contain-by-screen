@@ -12,11 +12,11 @@
 
 ## 1.1.1 (2017-07-28)
 
-* Update envify dependency version.
+* Updated envify dependency version.
 
 ## 1.1.0 (2016-09-13)
 
-* Add cover position value.
+* Added cover position value.
 
 ## 1.0.4 (2016-03-10)
 
@@ -25,7 +25,7 @@
 
 ## 1.0.2 (2016-01-19)
 
-* Fix bugs with buffers option.
+* Fixed bugs with buffers option.
 
 ## 1.0.0 (2016-01-19)
 
