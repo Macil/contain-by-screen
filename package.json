@@ -3,6 +3,7 @@
   "version": "1.2.1",
   "description": "Position a dropdown element near a button in a way that fits on the screen.",
   "main": "js/index.js",
+  "sideEffects": false,
   "scripts": {
     "prepare": "rimraf js && babel -s inline -d js/ src/ && flow-copy-source -v src js",
     "test": "yarn run lint && yarn run flow_check && mocha && tsc",
