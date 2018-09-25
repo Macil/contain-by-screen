@@ -73,5 +73,6 @@ uses it for building interactive menus.
 
 ## Types
 
-Full [Flow](https://flowtype.org/) type declarations for this module are
-included!
+Both [TypeScript](https://www.typescriptlang.org/) and
+[Flow](https://flowtype.org/) type definitions for this module are included!
+The type definitions won't require any configuration to use.
