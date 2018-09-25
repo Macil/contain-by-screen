@@ -1,3 +1,7 @@
+## 1.3.0 (2018-09-24)
+
+* Added TypeScript type definitions.
+
 ## 1.2.1 (2018-06-11)
 
 * Fixed mistake in [Flow](https://flow.org/) type definitions.
