@@ -51,10 +51,5 @@
     "@babel/runtime": "^7.0.0",
     "envify": "^4.1.0",
     "lodash": "^4.6.1"
-  },
-  "greenkeeper": {
-    "ignore": [
-      "flow-bin"
-    ]
   }
 }
