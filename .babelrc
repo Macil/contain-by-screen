@@ -4,9 +4,6 @@
     "@babel/preset-flow"
   ],
   "plugins": [
-    "@babel/plugin-transform-runtime",
-    ["add-module-exports", {
-      "addDefaultProperty": true
-    }]
+    "@babel/plugin-transform-runtime"
   ]
 }

@@ -3,9 +3,9 @@
 import flatten from 'lodash/flatten';
 import uniq from 'lodash/uniq';
 
-type PositionOption = 'top'|'bottom'|'left'|'right'|'cover';
-type HAlignOption = 'center'|'left'|'right';
-type VAlignOption = 'center'|'top'|'bottom';
+export type PositionOption = 'top'|'bottom'|'left'|'right'|'cover';
+export type HAlignOption = 'center'|'left'|'right';
+export type VAlignOption = 'center'|'top'|'bottom';
 
 export type Position = PositionOption | PositionOption[];
 export type HAlign = HAlignOption | HAlignOption[];
@@ -14,6 +14,16 @@ export type Choice = {
   position: PositionOption;
   hAlign: HAlignOption;
   vAlign: VAlignOption;
+};
+
+export type Coordinates = {
+  top: number;
+  left: number;
+};
+
+export type ChoiceAndCoordinates = {
+  choice: Choice;
+  coordinates: Coordinates;
 };
 
 export type Options = {
@@ -39,8 +49,20 @@ type Rect = { // Similar to ClientRect, but not a class
   width: number;
 };
 
-export default function containByScreen(element: HTMLElement, anchorPoint: HTMLElement, options: Options):
-Choice {
+export function containByScreen(
+  element: HTMLElement,
+  anchorPoint: HTMLElement,
+  options: Options
+): Choice {
+  const choiceAndCoord = getContainByScreenResults(element, anchorPoint, options);
+
+  element.style.top = `${choiceAndCoord.coordinates.top}px`;
+  element.style.left = `${choiceAndCoord.coordinates.left}px`;
+
+  return choiceAndCoord.choice;
+}
+
+export function getContainByScreenResults(element: HTMLElement, anchorPoint: HTMLElement, options: Options): ChoiceAndCoordinates {
   if (process.env.NODE_ENV !== 'production' && window.getComputedStyle) {
     const style = window.getComputedStyle(element);
     if (style.position !== 'fixed') {
@@ -82,18 +104,18 @@ Choice {
         vAligns.map(vAlign => ({position, hAlign: 'center', vAlign}))
   ));
 
-  let choiceAndCoord = null;
+  let choiceAndCoord: ChoiceAndCoordinates | null = null;
   for (let i=0; i < allPossibleChoices.length; i++) {
     const choice = allPossibleChoices[i];
-    const coord = positionAndAlign(elRect, anchorRect, choice, buffers);
-    const {top, left} = coord;
+    const coordinates = positionAndAlign(elRect, anchorRect, choice, buffers);
+    const {top, left} = coordinates;
     if (
       top-buffers.all-buffers.top >= 0 &&
       left-buffers.all-buffers.left >= 0 &&
       top+elRect.height+buffers.all+buffers.bottom <= window.innerHeight &&
       left+elRect.width+buffers.all+buffers.right <= window.innerWidth
     ) {
-      choiceAndCoord = {choice, coord};
+      choiceAndCoord = {choice, coordinates};
       break;
     }
   }
@@ -107,14 +129,11 @@ Choice {
     };
     choiceAndCoord = {
       choice,
-      coord: positionAndAlign(elRect, anchorRect, choice, buffers)
+      coordinates: positionAndAlign(elRect, anchorRect, choice, buffers)
     };
   }
 
-  element.style.top = `${choiceAndCoord.coord.top}px`;
-  element.style.left = `${choiceAndCoord.coord.left}px`;
-
-  return choiceAndCoord.choice;
+  return choiceAndCoord;
 }
 
 function getBoundingClientRect(el: Element): Rect {
@@ -129,7 +148,7 @@ function getBoundingClientRect(el: Element): Rect {
   return rect;
 }
 
-function positionAndAlign(elRect: Rect, anchorRect: Rect, {position, hAlign, vAlign}: Choice, buffers): {top: number, left: number} {
+function positionAndAlign(elRect: Rect, anchorRect: Rect, {position, hAlign, vAlign}: Choice, buffers): Coordinates {
   let top=0, left=0;
   if (position === 'cover') {
     switch (hAlign) {

@@ -1,7 +1,7 @@
 /* @flow */
 
 import assert from 'assert';
-import containByScreen from '../src';
+import { containByScreen } from '../src';
 
 global.window = null;
 

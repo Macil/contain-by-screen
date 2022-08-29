@@ -1,6 +1,6 @@
-type PositionOption = 'top'|'bottom'|'left'|'right'|'cover';
-type HAlignOption = 'center'|'left'|'right';
-type VAlignOption = 'center'|'top'|'bottom';
+export type PositionOption = 'top'|'bottom'|'left'|'right'|'cover';
+export type HAlignOption = 'center'|'left'|'right';
+export type VAlignOption = 'center'|'top'|'bottom';
 
 export type Position = PositionOption | PositionOption[];
 export type HAlign = HAlignOption | HAlignOption[];
@@ -9,6 +9,16 @@ export interface Choice {
   position: PositionOption;
   hAlign: HAlignOption;
   vAlign: VAlignOption;
+}
+
+export interface Coordinates {
+  top: number;
+  left: number;
+}
+
+export interface ChoiceAndCoordinates {
+  choice: Choice;
+  coordinates: Coordinates;
 }
 
 export interface Options {
@@ -25,5 +35,14 @@ export interface Options {
   rightBuffer?: number | null | undefined;
 }
 
-export default function containByScreen(element: HTMLElement, anchorPoint: HTMLElement, options: Options):
-Choice;
+export function containByScreen(
+  element: HTMLElement,
+  anchorPoint: HTMLElement,
+  options: Options
+): Choice;
+
+export function getContainByScreenResults(
+  element: HTMLElement,
+  anchorPoint: HTMLElement,
+  options: Options
+): ChoiceAndCoordinates;

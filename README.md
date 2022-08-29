@@ -8,9 +8,17 @@ You can pass an argument to make containByScreen prefer to put the dropdown
 menu below the button, and if there isn't enough room below the button, then
 the menu will be positioned next to or above the button automatically instead.
 
-This module can be used in Browsers via a CommonJS bundler such as Browserify.
+This module can be used in Browsers via a bundler such as Webpack or Browserify.
 
-## containByScreen(target, anchor, options)
+## API
+
+### containByScreen(target, anchor, options): Choice
+
+```js
+import { containByScreen } from 'contain-by-screen';
+```
+
+Moves the `target` element to be positioned next to the `anchor` element based on the given `options`. Returns a "Choice" object that may be used as the `options` parameter to other calls to containByScreen to position another element consistently with a previous call.
 
 `target` is the element to position, such as a dropdown menu. The element
 must have its CSS position property set to "fixed".
@@ -63,6 +71,14 @@ element. Buffers do not affect alignment with the anchor element.
 
 - `topBuffer`, `bottomBuffer`, `leftBuffer`, and `rightBuffer` specify an
 additional buffer space for a specific edge.
+
+### getContainByScreenResults(target, anchor, options): ChoiceAndCoordinates
+
+```js
+import { getContainByScreenResults } from 'contain-by-screen';
+```
+
+Works like `containByScreen`, but instead of positioning the element and returning a Choice object, this function does not mutate the element at all, and instead returns a `{choice, coordinates}` object where the `coordinates` property is an object with `left` and `right` properties specifying where to position the target element.
 
 ## Related
 
