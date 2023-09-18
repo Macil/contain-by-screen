@@ -1,7 +1,6 @@
-/* @flow */
-
 import flatten from 'lodash/flatten';
 import uniq from 'lodash/uniq';
+import { isNotNil } from './isNotNil';
 
 export type PositionOption = 'top'|'bottom'|'left'|'right'|'cover';
 export type HAlignOption = 'center'|'left'|'right';
@@ -10,44 +9,44 @@ export type VAlignOption = 'center'|'top'|'bottom';
 export type Position = PositionOption | PositionOption[];
 export type HAlign = HAlignOption | HAlignOption[];
 export type VAlign = VAlignOption | VAlignOption[];
-export type Choice = {
+export interface Choice {
   position: PositionOption;
   hAlign: HAlignOption;
   vAlign: VAlignOption;
-};
+}
 
-export type Coordinates = {
+export interface Coordinates {
   top: number;
   left: number;
-};
+}
 
-export type ChoiceAndCoordinates = {
+export interface ChoiceAndCoordinates {
   choice: Choice;
   coordinates: Coordinates;
-};
+}
 
-export type Options = {
-  position?: ?Position;
-  forcePosition?: ?boolean;
-  hAlign?: ?HAlign;
-  forceHAlign?: ?boolean;
-  vAlign?: ?VAlign;
-  forceVAlign?: ?boolean;
-  buffer?: ?number;
-  topBuffer?: ?number;
-  bottomBuffer?: ?number;
-  leftBuffer?: ?number;
-  rightBuffer?: ?number;
-};
+export interface Options {
+  position?: Position | null;
+  forcePosition?: boolean | null;
+  hAlign?: HAlign | null;
+  forceHAlign?: boolean | null;
+  vAlign?: VAlign | null;
+  forceVAlign?: boolean | null;
+  buffer?: number | null;
+  topBuffer?: number | null;
+  bottomBuffer?: number | null;
+  leftBuffer?: number | null;
+  rightBuffer?: number | null;
+}
 
-type Rect = { // Similar to ClientRect, but not a class
+interface Rect {
   top: number;
   bottom: number;
   height: number;
   left: number;
   right: number;
   width: number;
-};
+}
 
 export function containByScreen(
   element: HTMLElement,
@@ -82,9 +81,9 @@ export function getContainByScreenResults(element: HTMLElement, anchorPoint: HTM
     right: options.rightBuffer || 0
   };
 
-  const optionPositions = Array.isArray(options.position) ? options.position : [options.position].filter(Boolean);
-  const optionHAligns = Array.isArray(options.hAlign) ? options.hAlign : [options.hAlign].filter(Boolean);
-  const optionVAligns = Array.isArray(options.vAlign) ? options.vAlign : [options.vAlign].filter(Boolean);
+  const optionPositions = Array.isArray(options.position) ? options.position : [options.position].filter(isNotNil);
+  const optionHAligns = Array.isArray(options.hAlign) ? options.hAlign : [options.hAlign].filter(isNotNil);
+  const optionVAligns = Array.isArray(options.vAlign) ? options.vAlign : [options.vAlign].filter(isNotNil);
 
   const positions: PositionOption[] = optionPositions.length > 0 && options.forcePosition ?
     optionPositions :
@@ -96,9 +95,9 @@ export function getContainByScreenResults(element: HTMLElement, anchorPoint: HTM
     optionVAligns :
     uniq(optionVAligns.concat(['center','top','bottom']));
 
-  const allPossibleChoices = flatten(positions.map(position =>
+  const allPossibleChoices: Choice[] = flatten(positions.map(position =>
     (position === 'cover') ?
-      flatten(hAligns.map(hAlign => vAligns.map(vAlign => ({position, hAlign, vAlign})))) :
+      flatten(hAligns.map(hAlign => vAligns.map(vAlign => ({position, hAlign, vAlign} as Choice)))) :
       (position === 'top' || position === 'bottom') ?
         hAligns.map(hAlign => ({position, hAlign, vAlign: 'center'})) :
         vAligns.map(vAlign => ({position, hAlign: 'center', vAlign}))
@@ -140,15 +139,24 @@ function getBoundingClientRect(el: Element): Rect {
   let rect = el.getBoundingClientRect();
   if (!('width' in rect)) {
     // IE <9 support
-    rect = Object.assign(({
-      width: rect.right-rect.left,
-      height: rect.bottom-rect.top
-    }: Object), rect);
+    rect = {
+      width: (rect as any).right-(rect as any).left,
+      height: (rect as any).bottom-(rect as any).top,
+      ...(rect as any)
+    };
   }
   return rect;
 }
 
-function positionAndAlign(elRect: Rect, anchorRect: Rect, {position, hAlign, vAlign}: Choice, buffers): Coordinates {
+interface Buffers {
+  all: number;
+  top: number;
+  bottom: number;
+  left: number;
+  right: number;
+}
+
+function positionAndAlign(elRect: Rect, anchorRect: Rect, {position, hAlign, vAlign}: Choice, buffers: Buffers): Coordinates {
   let top=0, left=0;
   if (position === 'cover') {
     switch (hAlign) {

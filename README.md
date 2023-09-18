@@ -89,6 +89,5 @@ uses it for building interactive menus.
 
 ## Types
 
-Both [TypeScript](https://www.typescriptlang.org/) and
-[Flow](https://flowtype.org/) type definitions for this module are included!
+[TypeScript](https://www.typescriptlang.org/) type definitions for this module are included!
 The type definitions won't require any configuration to use.

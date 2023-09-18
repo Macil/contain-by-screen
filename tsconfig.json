@@ -1,9 +1,13 @@
 {
   "compilerOptions": {
-    "noEmit": true,
+    "outDir": "dist",
+    "rootDir": ".",
+    "emitDeclarationOnly": true,
+    "declaration": true,
     "strict": true,
     "module": "commonjs",
     "target": "ES2017",
-    "moduleResolution": "node"
+    "moduleResolution": "node",
+    "esModuleInterop": true
   }
 }
