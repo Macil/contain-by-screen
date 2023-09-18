@@ -1,19 +1,18 @@
 /* @flow */
 module.exports = {
-  'parser': '@babel/eslint-parser',
   'env': {
     'browser': true,
     'mocha': true,
     'node': true,
     'es6': true
   },
-  'extends': ['eslint:recommended'],
-  'plugins': [
-    'flowtype'
+  'extends': [
+    'eslint:recommended',
+    'plugin:@typescript-eslint/recommended'
   ],
+  'plugins': [],
   'rules': {
-    'flowtype/define-flow-type': 1,
-    'flowtype/require-valid-file-annotation': ['error', 'always'],
+    '@typescript-eslint/no-explicit-any': ['off'],
 
     'indent': ['error', 2],
     'linebreak-style': ['error', 'unix'],
