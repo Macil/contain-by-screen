@@ -205,6 +205,7 @@ function positionAndAlign(
         left = Math.ceil(anchorRect.right - elRect.width);
         break;
       default:
+        hAlign satisfies never;
         throw new Error("Should not happen");
     }
     switch (vAlign) {
@@ -220,6 +221,7 @@ function positionAndAlign(
         top = Math.ceil(anchorRect.bottom - elRect.height);
         break;
       default:
+        vAlign satisfies never;
         throw new Error("Should not happen");
     }
   } else if (position === "top" || position === "bottom") {
@@ -233,6 +235,7 @@ function positionAndAlign(
         top = Math.ceil(anchorRect.bottom + buffers.all + buffers.top);
         break;
       default:
+        position satisfies never;
         throw new Error("Should not happen");
     }
     switch (hAlign) {
@@ -248,6 +251,7 @@ function positionAndAlign(
         left = Math.round(anchorRect.right - elRect.width);
         break;
       default:
+        hAlign satisfies never;
         throw new Error("Should not happen");
     }
   } else {
@@ -261,6 +265,7 @@ function positionAndAlign(
         left = Math.ceil(anchorRect.right + buffers.all + buffers.left);
         break;
       default:
+        position satisfies never;
         throw new Error("Should not happen");
     }
     switch (vAlign) {
@@ -276,6 +281,7 @@ function positionAndAlign(
         top = Math.round(anchorRect.bottom - elRect.height);
         break;
       default:
+        vAlign satisfies never;
         throw new Error("Should not happen");
     }
   }
