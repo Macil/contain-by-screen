@@ -4,7 +4,7 @@ import { containByScreen } from "../src";
 (globalThis as any).window = null;
 
 class MockElement {
-  _rect: { top: number; bottom: number; left: number; right: number };
+  #rect: { top: number; bottom: number; left: number; right: number };
   style: unknown;
 
   constructor(rect: {
@@ -13,26 +13,26 @@ class MockElement {
     left: number;
     right: number;
   }) {
-    this._rect = rect;
+    this.#rect = rect;
     this.style = {};
   }
 
   getBoundingClientRect() {
     // Missing height and width to simulate IE8
-    return this._rect;
+    return this.#rect;
   }
 }
 
-describe("containByScreen", function () {
-  before(function () {
+describe("containByScreen", () => {
+  before(() => {
     (globalThis as any).window = { innerWidth: 800, innerHeight: 600 };
   });
 
-  after(function () {
+  after(() => {
     delete (globalThis as any).window;
   });
 
-  it("fallback", function () {
+  it("fallback", () => {
     const button = new MockElement({
       top: 10,
       bottom: 20,
@@ -59,9 +59,9 @@ describe("containByScreen", function () {
     assert.deepEqual(dropdown.style, { top: "20px", left: "30px" });
   });
 
-  describe("buffers", function () {
-    describe("target is placed buffer distance away", function () {
-      it("right, vAlign=top with buffers", function () {
+  describe("buffers", () => {
+    describe("target is placed buffer distance away", () => {
+      it("right, vAlign=top with buffers", () => {
         const button = new MockElement({
           top: 300,
           bottom: 320,
@@ -86,7 +86,7 @@ describe("containByScreen", function () {
         assert.deepEqual(dropdown.style, { top: "300px", left: "353px" });
       });
 
-      it("left, vAlign=top with buffers", function () {
+      it("left, vAlign=top with buffers", () => {
         const button = new MockElement({
           top: 300,
           bottom: 320,
@@ -111,7 +111,7 @@ describe("containByScreen", function () {
         assert.deepEqual(dropdown.style, { top: "300px", left: "197px" });
       });
 
-      it("left, vAlign=bottom with buffers", function () {
+      it("left, vAlign=bottom with buffers", () => {
         const button = new MockElement({
           top: 300,
           bottom: 320,
@@ -136,7 +136,7 @@ describe("containByScreen", function () {
         assert.deepEqual(dropdown.style, { top: "120px", left: "197px" });
       });
 
-      it("left, vAlign=center with buffers", function () {
+      it("left, vAlign=center with buffers", () => {
         const button = new MockElement({
           top: 300,
           bottom: 320,
@@ -161,7 +161,7 @@ describe("containByScreen", function () {
         assert.deepEqual(dropdown.style, { top: "210px", left: "197px" });
       });
 
-      it("top, hAlign=left with buffers", function () {
+      it("top, hAlign=left with buffers", () => {
         const button = new MockElement({
           top: 300,
           bottom: 320,
@@ -186,7 +186,7 @@ describe("containByScreen", function () {
         assert.deepEqual(dropdown.style, { top: "97px", left: "300px" });
       });
 
-      it("bottom, hAlign=left with buffers", function () {
+      it("bottom, hAlign=left with buffers", () => {
         const button = new MockElement({
           top: 300,
           bottom: 320,
@@ -211,7 +211,7 @@ describe("containByScreen", function () {
         assert.deepEqual(dropdown.style, { top: "323px", left: "300px" });
       });
 
-      it("bottom, hAlign=right with buffers", function () {
+      it("bottom, hAlign=right with buffers", () => {
         const button = new MockElement({
           top: 300,
           bottom: 320,
@@ -236,7 +236,7 @@ describe("containByScreen", function () {
         assert.deepEqual(dropdown.style, { top: "323px", left: "250px" });
       });
 
-      it("bottom, hAlign=center with buffers", function () {
+      it("bottom, hAlign=center with buffers", () => {
         const button = new MockElement({
           top: 300,
           bottom: 320,
@@ -261,8 +261,8 @@ describe("containByScreen", function () {
         assert.deepEqual(dropdown.style, { top: "323px", left: "275px" });
       });
 
-      describe("only used to guarantee space from screen edge in position:cover", function () {
-        it("vAlign=top hAlign=left with buffers", function () {
+      describe("only used to guarantee space from screen edge in position:cover", () => {
+        it("vAlign=top hAlign=left with buffers", () => {
           const button = new MockElement({
             top: 300,
             bottom: 320,
@@ -288,7 +288,7 @@ describe("containByScreen", function () {
           assert.deepEqual(dropdown.style, { top: "300px", left: "300px" });
         });
 
-        it("vAlign=bottom hAlign=right with buffers", function () {
+        it("vAlign=bottom hAlign=right with buffers", () => {
           const button = new MockElement({
             top: 300,
             bottom: 320,
@@ -314,7 +314,7 @@ describe("containByScreen", function () {
           assert.deepEqual(dropdown.style, { top: "120px", left: "250px" });
         });
 
-        it("vAlign=center hAlign=center with buffers", function () {
+        it("vAlign=center hAlign=center with buffers", () => {
           const button = new MockElement({
             top: 300,
             bottom: 320,
@@ -342,8 +342,8 @@ describe("containByScreen", function () {
       });
     });
 
-    describe("forces reposition if necessary", function () {
-      it("top", function () {
+    describe("forces reposition if necessary", () => {
+      it("top", () => {
         const button = new MockElement({
           top: 200,
           bottom: 400,
@@ -364,7 +364,7 @@ describe("containByScreen", function () {
         assert.deepEqual(dropdown.style, { top: "205px", left: "200px" });
       });
 
-      it("bottom", function () {
+      it("bottom", () => {
         const button = new MockElement({
           top: 200,
           bottom: 400,
@@ -385,7 +385,7 @@ describe("containByScreen", function () {
         assert.deepEqual(dropdown.style, { top: "205px", left: "200px" });
       });
 
-      it("left", function () {
+      it("left", () => {
         const button = new MockElement({
           top: 300,
           bottom: 320,
@@ -406,7 +406,7 @@ describe("containByScreen", function () {
         assert.deepEqual(dropdown.style, { top: "100px", left: "255px" });
       });
 
-      it("right", function () {
+      it("right", () => {
         const button = new MockElement({
           top: 300,
           bottom: 320,
@@ -428,8 +428,8 @@ describe("containByScreen", function () {
       });
     });
 
-    describe("can handle arrays", function () {
-      it("position", function () {
+    describe("can handle arrays", () => {
+      it("position", () => {
         const button = new MockElement({
           top: 200,
           bottom: 400,
@@ -450,7 +450,7 @@ describe("containByScreen", function () {
         assert.deepEqual(dropdown.style, { top: "205px", left: "200px" });
       });
 
-      it("vAlign", function () {
+      it("vAlign", () => {
         const button = new MockElement({
           top: 200,
           bottom: 400,
@@ -471,7 +471,7 @@ describe("containByScreen", function () {
         assert.deepEqual(dropdown.style, { top: "205px", left: "200px" });
       });
 
-      it("hAlign", function () {
+      it("hAlign", () => {
         const button = new MockElement({
           top: 300,
           bottom: 320,
@@ -493,8 +493,8 @@ describe("containByScreen", function () {
       });
     });
 
-    describe("cover", function () {
-      it("cover, vAlign=top hAlign=left", function () {
+    describe("cover", () => {
+      it("cover, vAlign=top hAlign=left", () => {
         const button = new MockElement({
           top: 100,
           bottom: 130,
@@ -516,7 +516,7 @@ describe("containByScreen", function () {
         assert.deepEqual(dropdown.style, { top: "100px", left: "100px" });
       });
 
-      it("cover, vAlign=top hAlign=right", function () {
+      it("cover, vAlign=top hAlign=right", () => {
         const button = new MockElement({
           top: 100,
           bottom: 130,
@@ -538,7 +538,7 @@ describe("containByScreen", function () {
         assert.deepEqual(dropdown.style, { top: "100px", left: "170px" });
       });
 
-      it("cover, vAlign=bottom hAlign=left", function () {
+      it("cover, vAlign=bottom hAlign=left", () => {
         const button = new MockElement({
           top: 400,
           bottom: 430,
@@ -560,7 +560,7 @@ describe("containByScreen", function () {
         assert.deepEqual(dropdown.style, { top: "330px", left: "100px" });
       });
 
-      it("cover, vAlign=bottom hAlign=right", function () {
+      it("cover, vAlign=bottom hAlign=right", () => {
         const button = new MockElement({
           top: 400,
           bottom: 430,
@@ -582,7 +582,7 @@ describe("containByScreen", function () {
         assert.deepEqual(dropdown.style, { top: "330px", left: "70px" });
       });
 
-      it("cover, vAlign=center hAlign=right", function () {
+      it("cover, vAlign=center hAlign=right", () => {
         const button = new MockElement({
           top: 400,
           bottom: 430,
@@ -604,7 +604,7 @@ describe("containByScreen", function () {
         assert.deepEqual(dropdown.style, { top: "365px", left: "70px" });
       });
 
-      it("cover, vAlign=center hAlign=center", function () {
+      it("cover, vAlign=center hAlign=center", () => {
         const button = new MockElement({
           top: 400,
           bottom: 430,
