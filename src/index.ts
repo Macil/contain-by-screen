@@ -1,10 +1,10 @@
-import flatten from 'lodash/flatten';
-import uniq from 'lodash/uniq';
-import { isNotNil } from './isNotNil';
+import flatten from "lodash/flatten";
+import uniq from "lodash/uniq";
+import { isNotNil } from "./isNotNil";
 
-export type PositionOption = 'top'|'bottom'|'left'|'right'|'cover';
-export type HAlignOption = 'center'|'left'|'right';
-export type VAlignOption = 'center'|'top'|'bottom';
+export type PositionOption = "top" | "bottom" | "left" | "right" | "cover";
+export type HAlignOption = "center" | "left" | "right";
+export type VAlignOption = "center" | "top" | "bottom";
 
 export type Position = PositionOption | PositionOption[];
 export type HAlign = HAlignOption | HAlignOption[];
@@ -51,9 +51,13 @@ interface Rect {
 export function containByScreen(
   element: HTMLElement,
   anchorPoint: HTMLElement,
-  options: Options
+  options: Options,
 ): Choice {
-  const choiceAndCoord = getContainByScreenResults(element, anchorPoint, options);
+  const choiceAndCoord = getContainByScreenResults(
+    element,
+    anchorPoint,
+    options,
+  );
 
   element.style.top = `${choiceAndCoord.coordinates.top}px`;
   element.style.left = `${choiceAndCoord.coordinates.left}px`;
@@ -61,12 +65,19 @@ export function containByScreen(
   return choiceAndCoord.choice;
 }
 
-export function getContainByScreenResults(element: HTMLElement, anchorPoint: HTMLElement, options: Options): ChoiceAndCoordinates {
-  if (process.env.NODE_ENV !== 'production' && window.getComputedStyle) {
+export function getContainByScreenResults(
+  element: HTMLElement,
+  anchorPoint: HTMLElement,
+  options: Options,
+): ChoiceAndCoordinates {
+  if (process.env.NODE_ENV !== "production" && window.getComputedStyle) {
     const style = window.getComputedStyle(element);
-    if (style.position !== 'fixed') {
+    if (style.position !== "fixed") {
       // eslint-disable-next-line no-console
-      console.error('containByScreen only works on fixed position elements', element);
+      console.error(
+        "containByScreen only works on fixed position elements",
+        element,
+      );
     }
   }
 
@@ -78,43 +89,59 @@ export function getContainByScreenResults(element: HTMLElement, anchorPoint: HTM
     top: options.topBuffer || 0,
     bottom: options.bottomBuffer || 0,
     left: options.leftBuffer || 0,
-    right: options.rightBuffer || 0
+    right: options.rightBuffer || 0,
   };
 
-  const optionPositions = Array.isArray(options.position) ? options.position : [options.position].filter(isNotNil);
-  const optionHAligns = Array.isArray(options.hAlign) ? options.hAlign : [options.hAlign].filter(isNotNil);
-  const optionVAligns = Array.isArray(options.vAlign) ? options.vAlign : [options.vAlign].filter(isNotNil);
+  const optionPositions = Array.isArray(options.position)
+    ? options.position
+    : [options.position].filter(isNotNil);
+  const optionHAligns = Array.isArray(options.hAlign)
+    ? options.hAlign
+    : [options.hAlign].filter(isNotNil);
+  const optionVAligns = Array.isArray(options.vAlign)
+    ? options.vAlign
+    : [options.vAlign].filter(isNotNil);
 
-  const positions: PositionOption[] = optionPositions.length > 0 && options.forcePosition ?
-    optionPositions :
-    uniq(optionPositions.concat(['top','bottom','left','right']));
-  const hAligns: HAlignOption[] = optionHAligns.length > 0 && options.forceHAlign ?
-    optionHAligns :
-    uniq(optionHAligns.concat(['center','left','right']));
-  const vAligns: VAlignOption[] = optionVAligns.length > 0 && options.forceVAlign ?
-    optionVAligns :
-    uniq(optionVAligns.concat(['center','top','bottom']));
+  const positions: PositionOption[] =
+    optionPositions.length > 0 && options.forcePosition
+      ? optionPositions
+      : uniq(optionPositions.concat(["top", "bottom", "left", "right"]));
+  const hAligns: HAlignOption[] =
+    optionHAligns.length > 0 && options.forceHAlign
+      ? optionHAligns
+      : uniq(optionHAligns.concat(["center", "left", "right"]));
+  const vAligns: VAlignOption[] =
+    optionVAligns.length > 0 && options.forceVAlign
+      ? optionVAligns
+      : uniq(optionVAligns.concat(["center", "top", "bottom"]));
 
-  const allPossibleChoices: Choice[] = flatten(positions.map(position =>
-    (position === 'cover') ?
-      flatten(hAligns.map(hAlign => vAligns.map(vAlign => ({position, hAlign, vAlign} as Choice)))) :
-      (position === 'top' || position === 'bottom') ?
-        hAligns.map(hAlign => ({position, hAlign, vAlign: 'center'})) :
-        vAligns.map(vAlign => ({position, hAlign: 'center', vAlign}))
-  ));
+  const allPossibleChoices: Choice[] = flatten(
+    positions.map((position) =>
+      position === "cover"
+        ? flatten(
+            hAligns.map((hAlign) =>
+              vAligns.map((vAlign) => ({ position, hAlign, vAlign }) as Choice),
+            ),
+          )
+        : position === "top" || position === "bottom"
+        ? hAligns.map((hAlign) => ({ position, hAlign, vAlign: "center" }))
+        : vAligns.map((vAlign) => ({ position, hAlign: "center", vAlign })),
+    ),
+  );
 
   let choiceAndCoord: ChoiceAndCoordinates | null = null;
-  for (let i=0; i < allPossibleChoices.length; i++) {
+  for (let i = 0; i < allPossibleChoices.length; i++) {
     const choice = allPossibleChoices[i];
     const coordinates = positionAndAlign(elRect, anchorRect, choice, buffers);
-    const {top, left} = coordinates;
+    const { top, left } = coordinates;
     if (
-      top-buffers.all-buffers.top >= 0 &&
-      left-buffers.all-buffers.left >= 0 &&
-      top+elRect.height+buffers.all+buffers.bottom <= window.innerHeight &&
-      left+elRect.width+buffers.all+buffers.right <= window.innerWidth
+      top - buffers.all - buffers.top >= 0 &&
+      left - buffers.all - buffers.left >= 0 &&
+      top + elRect.height + buffers.all + buffers.bottom <=
+        window.innerHeight &&
+      left + elRect.width + buffers.all + buffers.right <= window.innerWidth
     ) {
-      choiceAndCoord = {choice, coordinates};
+      choiceAndCoord = { choice, coordinates };
       break;
     }
   }
@@ -122,13 +149,13 @@ export function getContainByScreenResults(element: HTMLElement, anchorPoint: HTM
   // Fallback if we failed to find a position that fit on the screen.
   if (!choiceAndCoord) {
     const choice = {
-      position: optionPositions[0]||'top',
-      hAlign: optionHAligns[0]||'center',
-      vAlign: optionVAligns[0]||'center'
+      position: optionPositions[0] || "top",
+      hAlign: optionHAligns[0] || "center",
+      vAlign: optionVAligns[0] || "center",
     };
     choiceAndCoord = {
       choice,
-      coordinates: positionAndAlign(elRect, anchorRect, choice, buffers)
+      coordinates: positionAndAlign(elRect, anchorRect, choice, buffers),
     };
   }
 
@@ -137,12 +164,12 @@ export function getContainByScreenResults(element: HTMLElement, anchorPoint: HTM
 
 function getBoundingClientRect(el: Element): Rect {
   let rect = el.getBoundingClientRect();
-  if (!('width' in rect)) {
+  if (!("width" in rect)) {
     // IE <9 support
     rect = {
-      width: (rect as any).right-(rect as any).left,
-      height: (rect as any).bottom-(rect as any).top,
-      ...(rect as any)
+      width: (rect as any).right - (rect as any).left,
+      height: (rect as any).bottom - (rect as any).top,
+      ...(rect as any),
     };
   }
   return rect;
@@ -156,77 +183,101 @@ interface Buffers {
   right: number;
 }
 
-function positionAndAlign(elRect: Rect, anchorRect: Rect, {position, hAlign, vAlign}: Choice, buffers: Buffers): Coordinates {
-  let top=0, left=0;
-  if (position === 'cover') {
+function positionAndAlign(
+  elRect: Rect,
+  anchorRect: Rect,
+  { position, hAlign, vAlign }: Choice,
+  buffers: Buffers,
+): Coordinates {
+  let top = 0,
+    left = 0;
+  if (position === "cover") {
     switch (hAlign) {
-    case 'center':
-      left = Math.round((anchorRect.left + anchorRect.right - elRect.width)/2);
-      break;
-    case 'left':
-      left = Math.floor(anchorRect.left);
-      break;
-    case 'right':
-      left = Math.ceil(anchorRect.right - elRect.width);
-      break;
-    default: throw new Error('Should not happen');
+      case "center":
+        left = Math.round(
+          (anchorRect.left + anchorRect.right - elRect.width) / 2,
+        );
+        break;
+      case "left":
+        left = Math.floor(anchorRect.left);
+        break;
+      case "right":
+        left = Math.ceil(anchorRect.right - elRect.width);
+        break;
+      default:
+        throw new Error("Should not happen");
     }
     switch (vAlign) {
-    case 'center':
-      top = Math.round((anchorRect.top + anchorRect.bottom - elRect.height)/2);
-      break;
-    case 'top':
-      top = Math.floor(anchorRect.top);
-      break;
-    case 'bottom':
-      top = Math.ceil(anchorRect.bottom - elRect.height);
-      break;
-    default: throw new Error('Should not happen');
+      case "center":
+        top = Math.round(
+          (anchorRect.top + anchorRect.bottom - elRect.height) / 2,
+        );
+        break;
+      case "top":
+        top = Math.floor(anchorRect.top);
+        break;
+      case "bottom":
+        top = Math.ceil(anchorRect.bottom - elRect.height);
+        break;
+      default:
+        throw new Error("Should not happen");
     }
-  } else if (position === 'top' || position === 'bottom') {
+  } else if (position === "top" || position === "bottom") {
     switch (position) {
-    case 'top':
-      top = Math.floor(anchorRect.top - elRect.height - buffers.all - buffers.bottom);
-      break;
-    case 'bottom':
-      top = Math.ceil(anchorRect.bottom + buffers.all + buffers.top);
-      break;
-    default: throw new Error('Should not happen');
+      case "top":
+        top = Math.floor(
+          anchorRect.top - elRect.height - buffers.all - buffers.bottom,
+        );
+        break;
+      case "bottom":
+        top = Math.ceil(anchorRect.bottom + buffers.all + buffers.top);
+        break;
+      default:
+        throw new Error("Should not happen");
     }
     switch (hAlign) {
-    case 'center':
-      left = Math.round((anchorRect.left + anchorRect.right - elRect.width)/2);
-      break;
-    case 'left':
-      left = Math.round(anchorRect.left);
-      break;
-    case 'right':
-      left = Math.round(anchorRect.right - elRect.width);
-      break;
-    default: throw new Error('Should not happen');
+      case "center":
+        left = Math.round(
+          (anchorRect.left + anchorRect.right - elRect.width) / 2,
+        );
+        break;
+      case "left":
+        left = Math.round(anchorRect.left);
+        break;
+      case "right":
+        left = Math.round(anchorRect.right - elRect.width);
+        break;
+      default:
+        throw new Error("Should not happen");
     }
   } else {
     switch (position) {
-    case 'left':
-      left = Math.floor(anchorRect.left - elRect.width - buffers.all - buffers.right);
-      break;
-    case 'right':
-      left = Math.ceil(anchorRect.right + buffers.all + buffers.left);
-      break;
-    default: throw new Error('Should not happen');
+      case "left":
+        left = Math.floor(
+          anchorRect.left - elRect.width - buffers.all - buffers.right,
+        );
+        break;
+      case "right":
+        left = Math.ceil(anchorRect.right + buffers.all + buffers.left);
+        break;
+      default:
+        throw new Error("Should not happen");
     }
     switch (vAlign) {
-    case 'center':
-      top = Math.round((anchorRect.top + anchorRect.bottom - elRect.height)/2);
-      break;
-    case 'top':
-      top = Math.round(anchorRect.top);
-      break;
-    case 'bottom':
-      top = Math.round(anchorRect.bottom - elRect.height);
-      break;
-    default: throw new Error('Should not happen');
+      case "center":
+        top = Math.round(
+          (anchorRect.top + anchorRect.bottom - elRect.height) / 2,
+        );
+        break;
+      case "top":
+        top = Math.round(anchorRect.top);
+        break;
+      case "bottom":
+        top = Math.round(anchorRect.bottom - elRect.height);
+        break;
+      default:
+        throw new Error("Should not happen");
     }
   }
-  return {top, left};
+  return { top, left };
 }
