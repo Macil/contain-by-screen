@@ -2,11 +2,18 @@
 
 ### Breaking Changes
 
-- The `containByScreen` function is now a named export of the module rather than the default export. Code importing the function must be updated from `import containByScreen from "contain-by-screen";` to `import { containByScreen } from "contain-by-screen";`, or from `const containByScreen = require("contain-by-screen");` to `const { containByScreen } = require("contain-by-screen");`.
+- The `containByScreen` function is now a named export of the module rather than
+  the default export. Code importing the function must be updated from
+  `import containByScreen from "contain-by-screen";` to
+  `import { containByScreen } from "contain-by-screen";`, or from
+  `const containByScreen = require("contain-by-screen");` to
+  `const { containByScreen } = require("contain-by-screen");`.
 
 ### Other Changes
 
-- Added `getContainByScreenResults` function that works like the default `containByScreen` function but returns its suggested modification instead of doing it.
+- Added `getContainByScreenResults` function that works like the default
+  `containByScreen` function but returns its suggested modification instead of
+  doing it.
 
 ## 1.3.0 (2018-09-24)
 
