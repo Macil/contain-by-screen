@@ -1,6 +1,6 @@
 {
   "name": "contain-by-screen",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "Position a dropdown element near a button in a way that fits on the screen.",
   "main": "dist/src/index.js",
   "sideEffects": false,
