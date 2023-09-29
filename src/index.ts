@@ -261,9 +261,8 @@ function positionAndAlign(
         left = Math.ceil(anchorRect.right - elRect.width);
         break;
       case "unaligned": {
-        left = Math.max(
-          buffers.all + buffers.left,
-          Math.round((anchorRect.left + anchorRect.right - elRect.width) / 2),
+        left = Math.round(
+          (anchorRect.left + anchorRect.right - elRect.width) / 2,
         );
         const overhang = Math.ceil(
           left + elRect.width + buffers.all + buffers.right - window.innerWidth,
@@ -271,6 +270,7 @@ function positionAndAlign(
         if (overhang > 0) {
           left -= overhang;
         }
+        left = Math.max(buffers.all + buffers.left, left);
         break;
       }
       default:
@@ -290,9 +290,8 @@ function positionAndAlign(
         top = Math.ceil(anchorRect.bottom - elRect.height);
         break;
       case "unaligned": {
-        top = Math.max(
-          buffers.all + buffers.top,
-          Math.round((anchorRect.top + anchorRect.bottom - elRect.height) / 2),
+        top = Math.round(
+          (anchorRect.top + anchorRect.bottom - elRect.height) / 2,
         );
         const overhang = Math.ceil(
           top +
@@ -304,6 +303,7 @@ function positionAndAlign(
         if (overhang > 0) {
           top -= overhang;
         }
+        top = Math.max(buffers.all + buffers.top, top);
         break;
       }
       default:
@@ -337,9 +337,8 @@ function positionAndAlign(
         left = Math.round(anchorRect.right - elRect.width);
         break;
       case "unaligned": {
-        left = Math.max(
-          buffers.all + buffers.left,
-          Math.round((anchorRect.left + anchorRect.right - elRect.width) / 2),
+        left = Math.round(
+          (anchorRect.left + anchorRect.right - elRect.width) / 2,
         );
         const overhang = Math.ceil(
           left + elRect.width + buffers.all + buffers.right - window.innerWidth,
@@ -347,6 +346,7 @@ function positionAndAlign(
         if (overhang > 0) {
           left -= overhang;
         }
+        left = Math.max(buffers.all + buffers.left, left);
         break;
       }
       default:
@@ -380,9 +380,8 @@ function positionAndAlign(
         top = Math.round(anchorRect.bottom - elRect.height);
         break;
       case "unaligned": {
-        top = Math.max(
-          buffers.all + buffers.top,
-          Math.round((anchorRect.top + anchorRect.bottom - elRect.height) / 2),
+        top = Math.round(
+          (anchorRect.top + anchorRect.bottom - elRect.height) / 2,
         );
         const overhang = Math.ceil(
           top +
@@ -394,6 +393,7 @@ function positionAndAlign(
         if (overhang > 0) {
           top -= overhang;
         }
+        top = Math.max(buffers.all + buffers.top, top);
         break;
       }
       default:
