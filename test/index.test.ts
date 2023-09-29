@@ -32,7 +32,7 @@ describe("containByScreen", () => {
     delete (globalThis as any).window;
   });
 
-  it("fallback", () => {
+  it("reposition to bottom", () => {
     const button = new MockElement({
       top: 10,
       bottom: 20,
@@ -46,9 +46,14 @@ describe("containByScreen", () => {
       right: 100,
     });
 
-    containByScreen(dropdown as any, button as any, {
+    const choice = containByScreen(dropdown as any, button as any, {
       position: "left",
       hAlign: "center",
+      vAlign: "center",
+    });
+    assert.deepEqual(choice, {
+      position: "bottom",
+      hAlign: "left",
       vAlign: "center",
     });
 
@@ -57,6 +62,178 @@ describe("containByScreen", () => {
 
     // dropdown is moved
     assert.deepEqual(dropdown.style, { top: "20px", left: "30px" });
+  });
+
+  describe("fallback to unaligned", () => {
+    it("fallback to vAlign:unaligned clipped at top", () => {
+      const button = new MockElement({
+        top: 200,
+        bottom: 220,
+        left: 30,
+        right: 50,
+      });
+      const dropdown = new MockElement({
+        top: 0,
+        bottom: 550,
+        left: 0,
+        right: 100,
+      });
+
+      const choice = containByScreen(dropdown as any, button as any, {
+        position: "left",
+        hAlign: "center",
+        vAlign: "center",
+        buffer: 1,
+        topBuffer: 2,
+        bottomBuffer: 3,
+        leftBuffer: 4,
+        rightBuffer: 5,
+      });
+      assert.deepEqual(choice, {
+        position: "right",
+        hAlign: "center",
+        vAlign: "unaligned",
+      });
+
+      // dropdown is moved
+      assert.deepEqual(dropdown.style, { top: "3px", left: "55px" });
+    });
+
+    it("fallback to vAlign:unaligned clipped at bottom", () => {
+      const button = new MockElement({
+        top: 400,
+        bottom: 420,
+        left: 30,
+        right: 50,
+      });
+      const dropdown = new MockElement({
+        top: 0,
+        bottom: 550,
+        left: 0,
+        right: 100,
+      });
+
+      const choice = containByScreen(dropdown as any, button as any, {
+        position: "left",
+        hAlign: "center",
+        vAlign: "center",
+        buffer: 1,
+        topBuffer: 2,
+        bottomBuffer: 3,
+        leftBuffer: 4,
+        rightBuffer: 5,
+      });
+      assert.deepEqual(choice, {
+        position: "right",
+        hAlign: "center",
+        vAlign: "unaligned",
+      });
+
+      // dropdown is moved
+      assert.deepEqual(dropdown.style, { top: "46px", left: "55px" });
+    });
+
+    it("fallback to hAlign:unaligned clipped at left", () => {
+      const button = new MockElement({
+        top: 200,
+        bottom: 220,
+        left: 230,
+        right: 250,
+      });
+      const dropdown = new MockElement({
+        top: 0,
+        bottom: 50,
+        left: 0,
+        right: 760,
+      });
+
+      const choice = containByScreen(dropdown as any, button as any, {
+        position: "left",
+        hAlign: "center",
+        vAlign: "center",
+        buffer: 1,
+        topBuffer: 2,
+        bottomBuffer: 3,
+        leftBuffer: 4,
+        rightBuffer: 5,
+      });
+      assert.deepEqual(choice, {
+        position: "top",
+        hAlign: "unaligned",
+        vAlign: "center",
+      });
+
+      // dropdown is moved
+      assert.deepEqual(dropdown.style, { top: "146px", left: "5px" });
+    });
+
+    it("fallback to hAlign:unaligned clipped at right", () => {
+      const button = new MockElement({
+        top: 200,
+        bottom: 220,
+        left: 630,
+        right: 650,
+      });
+      const dropdown = new MockElement({
+        top: 0,
+        bottom: 50,
+        left: 0,
+        right: 760,
+      });
+
+      const choice = containByScreen(dropdown as any, button as any, {
+        position: "left",
+        hAlign: "center",
+        vAlign: "center",
+        buffer: 1,
+        topBuffer: 2,
+        bottomBuffer: 3,
+        leftBuffer: 4,
+        rightBuffer: 5,
+      });
+      assert.deepEqual(choice, {
+        position: "top",
+        hAlign: "unaligned",
+        vAlign: "center",
+      });
+
+      // dropdown is moved
+      assert.deepEqual(dropdown.style, { top: "146px", left: "34px" });
+    });
+
+    it("fallback after all positioning attempts fail", () => {
+      const button = new MockElement({
+        top: 200,
+        bottom: 220,
+        left: 630,
+        right: 650,
+      });
+      const dropdown = new MockElement({
+        top: 0,
+        bottom: 560,
+        left: 0,
+        right: 760,
+      });
+
+      const choice = containByScreen(dropdown as any, button as any, {
+        position: "left",
+        hAlign: "center",
+        vAlign: "center",
+        buffer: 1,
+        topBuffer: 2,
+        bottomBuffer: 3,
+        leftBuffer: 4,
+        rightBuffer: 5,
+      });
+      assert.deepEqual(choice, {
+        position: "cover",
+        hAlign: "unaligned",
+        vAlign: "unaligned",
+      });
+
+      // dropdown is moved
+      assert.deepEqual(dropdown.style, { top: "3px", left: "34px" });
+    });
   });
 
   describe("buffers", () => {

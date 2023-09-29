@@ -3,8 +3,20 @@ import uniq from "lodash/uniq";
 import { isNotNil } from "./isNotNil";
 
 export type PositionOption = "top" | "bottom" | "left" | "right" | "cover";
-export type HAlignOption = "center" | "left" | "right";
-export type VAlignOption = "center" | "top" | "bottom";
+/**
+ * This option is used when position is "cover", "top", or "bottom".
+ * It controls the horizontal alignment of the element relative to the anchor.
+ * "center" means the element's center is aligned with the anchor's center.
+ * "left" and "right" means that edge of the element is aligned with the same edge of the anchor.
+ * "unaligned" means the element may not be aligned with the anchor at all. Currently
+ * this works by doing the same thing as "center" and then adjusting the result to fit on screen.
+ */
+export type HAlignOption = "center" | "left" | "right" | "unaligned";
+/**
+ * Similar to {@link HAlignOption}, except this controls the vertical alignment of the element
+ * relative to the anchor when the position is "cover", "left", or "right".
+ */
+export type VAlignOption = "center" | "top" | "bottom" | "unaligned";
 
 export type Position = PositionOption | PositionOption[];
 export type HAlign = HAlignOption | HAlignOption[];
@@ -129,29 +141,73 @@ export function getContainByScreenResults(
     ),
   );
 
+  // Try unaligned versions at the end
+  if (!hAligns.includes("unaligned")) {
+    allPossibleChoices.push(
+      ...flatten(
+        positions.map((position) =>
+          !["cover", "top", "bottom"].includes(position)
+            ? []
+            : vAligns.map((vAlign) => ({
+                position,
+                hAlign: "unaligned" as const,
+                vAlign,
+              })),
+        ),
+      ),
+    );
+  }
+  if (!vAligns.includes("unaligned")) {
+    allPossibleChoices.push(
+      ...flatten(
+        positions.map((position) =>
+          !["cover", "left", "right"].includes(position)
+            ? []
+            : hAligns.map((hAlign) => ({
+                position,
+                hAlign,
+                vAlign: "unaligned" as const,
+              })),
+        ),
+      ),
+    );
+  }
+
   let choiceAndCoord: ChoiceAndCoordinates | null = null;
   for (let i = 0; i < allPossibleChoices.length; i++) {
     const choice = allPossibleChoices[i];
     const coordinates = positionAndAlign(elRect, anchorRect, choice, buffers);
     const { top, left } = coordinates;
-    if (
-      top - buffers.all - buffers.top >= 0 &&
-      left - buffers.all - buffers.left >= 0 &&
-      top + elRect.height + buffers.all + buffers.bottom <=
-        window.innerHeight &&
-      left + elRect.width + buffers.all + buffers.right <= window.innerWidth
-    ) {
+
+    const ignoreHorizontalConstraints =
+      choice.hAlign === "unaligned" &&
+      ["cover", "top", "bottom"].includes(choice.position);
+    const ignoreVerticalConstraints =
+      choice.vAlign === "unaligned" &&
+      ["cover", "left", "right"].includes(choice.position);
+
+    const hasHorizontalFit =
+      ignoreHorizontalConstraints ||
+      (left - buffers.all - buffers.left >= 0 &&
+        left + elRect.width + buffers.all + buffers.right <= window.innerWidth);
+    const hasVerticalFit =
+      ignoreVerticalConstraints ||
+      (top - buffers.all - buffers.top >= 0 &&
+        top + elRect.height + buffers.all + buffers.bottom <=
+          window.innerHeight);
+
+    if (hasHorizontalFit && hasVerticalFit) {
       choiceAndCoord = { choice, coordinates };
       break;
     }
   }
 
-  // Fallback if we failed to find a position that fit on the screen.
+  // Fallback if we failed to find a choice that fit on the screen.
   if (!choiceAndCoord) {
-    const choice = {
-      position: optionPositions[0] || "top",
-      hAlign: optionHAligns[0] || "center",
-      vAlign: optionVAligns[0] || "center",
+    const choice: Choice = {
+      position: "cover",
+      hAlign: "unaligned",
+      vAlign: "unaligned",
     };
     choiceAndCoord = {
       choice,
@@ -204,6 +260,19 @@ function positionAndAlign(
       case "right":
         left = Math.ceil(anchorRect.right - elRect.width);
         break;
+      case "unaligned": {
+        left = Math.max(
+          buffers.all + buffers.left,
+          Math.round((anchorRect.left + anchorRect.right - elRect.width) / 2),
+        );
+        const overhang = Math.ceil(
+          left + elRect.width + buffers.all + buffers.right - window.innerWidth,
+        );
+        if (overhang > 0) {
+          left -= overhang;
+        }
+        break;
+      }
       default:
         hAlign satisfies never;
         throw new Error("Should not happen");
@@ -220,6 +289,23 @@ function positionAndAlign(
       case "bottom":
         top = Math.ceil(anchorRect.bottom - elRect.height);
         break;
+      case "unaligned": {
+        top = Math.max(
+          buffers.all + buffers.top,
+          Math.round((anchorRect.top + anchorRect.bottom - elRect.height) / 2),
+        );
+        const overhang = Math.ceil(
+          top +
+            elRect.height +
+            buffers.all +
+            buffers.bottom -
+            window.innerHeight,
+        );
+        if (overhang > 0) {
+          top -= overhang;
+        }
+        break;
+      }
       default:
         vAlign satisfies never;
         throw new Error("Should not happen");
@@ -250,6 +336,19 @@ function positionAndAlign(
       case "right":
         left = Math.round(anchorRect.right - elRect.width);
         break;
+      case "unaligned": {
+        left = Math.max(
+          buffers.all + buffers.left,
+          Math.round((anchorRect.left + anchorRect.right - elRect.width) / 2),
+        );
+        const overhang = Math.ceil(
+          left + elRect.width + buffers.all + buffers.right - window.innerWidth,
+        );
+        if (overhang > 0) {
+          left -= overhang;
+        }
+        break;
+      }
       default:
         hAlign satisfies never;
         throw new Error("Should not happen");
@@ -280,6 +379,23 @@ function positionAndAlign(
       case "bottom":
         top = Math.round(anchorRect.bottom - elRect.height);
         break;
+      case "unaligned": {
+        top = Math.max(
+          buffers.all + buffers.top,
+          Math.round((anchorRect.top + anchorRect.bottom - elRect.height) / 2),
+        );
+        const overhang = Math.ceil(
+          top +
+            elRect.height +
+            buffers.all +
+            buffers.bottom -
+            window.innerHeight,
+        );
+        if (overhang > 0) {
+          top -= overhang;
+        }
+        break;
+      }
       default:
         vAlign satisfies never;
         throw new Error("Should not happen");
