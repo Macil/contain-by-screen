@@ -1,0 +1,50 @@
+/* @flow */
+
+export type PositionOption = "top" | "bottom" | "left" | "right" | "cover";
+export type HAlignOption = "center" | "left" | "right" | "unaligned";
+export type VAlignOption = "center" | "top" | "bottom" | "unaligned";
+
+export type Position = PositionOption | PositionOption[];
+export type HAlign = HAlignOption | HAlignOption[];
+export type VAlign = VAlignOption | VAlignOption[];
+export interface Choice {
+  position: PositionOption;
+  hAlign: HAlignOption;
+  vAlign: VAlignOption;
+}
+
+export interface Coordinates {
+  top: number;
+  left: number;
+}
+
+export interface ChoiceAndCoordinates {
+  choice: Choice;
+  coordinates: Coordinates;
+}
+
+export interface Options {
+  position?: Position | null | void;
+  forcePosition?: boolean | null | void;
+  hAlign?: HAlign | null | void;
+  forceHAlign?: boolean | null | void;
+  vAlign?: VAlign | null | void;
+  forceVAlign?: boolean | null | void;
+  buffer?: number | null | void;
+  topBuffer?: number | null | void;
+  bottomBuffer?: number | null | void;
+  leftBuffer?: number | null | void;
+  rightBuffer?: number | null | void;
+}
+
+declare export function containByScreen(
+  element: HTMLElement,
+  anchorPoint: HTMLElement,
+  options: Options,
+): Choice;
+
+declare export function getContainByScreenResults(
+  element: HTMLElement,
+  anchorPoint: HTMLElement,
+  options: Options,
+): ChoiceAndCoordinates;

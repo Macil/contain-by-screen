@@ -5,7 +5,7 @@
   "main": "dist/src/index.js",
   "sideEffects": false,
   "scripts": {
-    "prepare": "rimraf dist && babel -s true -d dist/src/ src/ -x .ts,.tsx --ignore '**/*.test.ts,**/*.test.tsx' && tsc",
+    "prepare": "rimraf dist && babel -s true -d dist/src/ src/ -x .ts,.tsx --ignore '**/*.test.ts,**/*.test.tsx' && tsc && cp index.js.flow dist/src/",
     "build-watch": "babel --watch -s true -d dist/src/ src/ -x .ts,.tsx --ignore '**/*.test.ts,**/*.test.tsx'",
     "test": "yarn run lint && mocha && tsc --noEmit --emitDeclarationOnly false",
     "lint": "eslint .",
