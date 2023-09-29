@@ -1,3 +1,9 @@
+## 2.1.0 (2023-09-29)
+
+- Fixed issue where large elements could fail to be positioned onscreen
+  [#17](https://github.com/Macil/contain-by-screen/issues/17).
+- Added new "unaligned" value for `hAlign` and `vAlign` options.
+
 ## 2.0.0 (2022-08-29)
 
 ### Breaking Changes
